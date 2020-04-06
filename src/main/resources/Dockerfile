@@ -9,6 +9,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ  /etc/localtime && echo $TZ > /etc/timezone
 # 将maven构建好的jar添加到镜像中
 ADD ./target/*.jar app.jar
 # 暴露的端口号
-EXPOSE 8077
+EXPOSE 8088
 # 镜像所执行的命令
 ENTRYPOINT ["java","-jar","/app.jar"]
