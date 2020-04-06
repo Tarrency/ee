@@ -1,2 +1,10 @@
 server:
   port: 8088
+spring:
+  datasource:
+    url: jdbc:mysql://39.102.46.180:3306/CUQADatabase?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    password: cuqa
+    username: cuqa_q8s63g
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
