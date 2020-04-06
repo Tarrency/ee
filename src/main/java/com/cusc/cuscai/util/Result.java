@@ -1,8 +1,11 @@
 package com.cusc.cuscai.util;
 
+import lombok.Data;
+
 /**
  * 统一返回
  */
+@Data
 public class Result {
     //状态码
     private Integer code;
