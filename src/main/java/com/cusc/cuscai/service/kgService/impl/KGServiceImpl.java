@@ -58,13 +58,13 @@ public class KGServiceImpl implements KGServer {
     @Override
     public Base modifyNode(long id, String name, String desc, String sex) { //修改Person节点
         Base base = findNodeById(id);
-        if(!name.equals("") && name!=null){
+        if(!name.equals("") && name!=null && !name.equals("null")){
             base.setName(name);
         }
-        if(!desc.equals("") && desc!=null){
+        if(!desc.equals("") && desc!=null && !desc.equals("null")){
             ((Person)base).setDesc(desc);
         }
-        if(!sex.equals("") && sex!=null){
+        if(!sex.equals("") && sex!=null && !sex.equals("null")){
             ((Person)base).setSex(sex);
         }
         System.out.println(base);

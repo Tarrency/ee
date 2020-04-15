@@ -36,13 +36,13 @@ public class KGController {
         Person person = new Person();
         person.setPerson(name);
         person.setName(name);
-        if(!desc.equals("") && desc!=null){
+        if(!desc.equals("") && desc!=null && !desc.equals("null")){
             person.setDesc(desc);
         }
-        if(!sex.equals("") && sex!=null){
+        if(!sex.equals("") && sex!=null && !sex.equals("null")){
             person.setSex(sex);
         }
-        if(!otherName.equals("") && otherName!=null){
+        if(!otherName.equals("") && otherName!=null && !otherName.equals("null")){
             person.setOtherName(otherName);
         }
         kgServer.addNode(person);
