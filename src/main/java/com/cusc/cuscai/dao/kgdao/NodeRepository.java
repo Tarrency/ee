@@ -1,4 +1,4 @@
-package com.cusc.cuscai.kgdao;
+package com.cusc.cuscai.dao.kgdao;
 
 
 import com.cusc.cuscai.entity.kgEntity.Base;

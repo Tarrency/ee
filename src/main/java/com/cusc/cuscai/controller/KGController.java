@@ -18,6 +18,7 @@ import java.util.List;
 
 @Api(tags = "KG相关接口") //一个tag
 @RestController
+@RequestMapping("/kg")
 public class KGController {
     @Autowired
     private KGServer kgServer;

@@ -1,7 +1,7 @@
 package com.cusc.cuscai.service.kgService.impl;
 
-import com.cusc.cuscai.kgdao.NodeRepository;
-import com.cusc.cuscai.kgdao.RelationRepository;
+import com.cusc.cuscai.dao.kgdao.NodeRepository;
+import com.cusc.cuscai.dao.kgdao.RelationRepository;
 import com.cusc.cuscai.entity.kgEntity.Base;
 import com.cusc.cuscai.entity.kgEntity.Person;
 import com.cusc.cuscai.entity.kgEntity.Relation;
