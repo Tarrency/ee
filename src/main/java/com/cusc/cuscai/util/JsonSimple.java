@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class JsonSimple {
     private static Logger logger = LoggerFactory.getLogger(JsonSimple.class);
-    private static ObjectMapper mapper = null;
+    private static ObjectMapper mapper;
 
     static {
         mapper = new ObjectMapper();
@@ -75,9 +75,7 @@ public class JsonSimple {
     }
 
     /**
-     * 反序列化复杂Collection如List<Bean>, 先使用createCollectionType()或contructMapType()构造类型, 然后调用本函数.
-     *
-     * @see #createCollectionType(Class, Class...)
+     * 反序列化复杂Collection如List<Bean>, 先使用contructCollectionType()或contructMapType()构造类型, 然后调用本函数.
      */
     @SuppressWarnings("unchecked")
     public static <T> T fromJson(String jsonString, JavaType javaType) {
@@ -112,20 +110,18 @@ public class JsonSimple {
     }
 
     /**
-     * 当JSON里只含有Bean的部分屬性時，更新一個已存在Bean，只覆蓋該部分的屬性.
+     * 当JSON里只含有Bean的部分属性时，更新一个已存在Bean，只覆盖该部分的属性.
      */
     public static void update(String jsonString, Object object) {
         try {
             mapper.readerForUpdating(object).readValue(jsonString);
-        } catch (JsonProcessingException e) {
-            logger.warn("update json string:" + jsonString + " to object:" + object + " error.", e);
         } catch (IOException e) {
             logger.warn("update json string:" + jsonString + " to object:" + object + " error.", e);
         }
     }
 
     /**
-     * 輸出JSONP格式數據.
+     * 输出JSONP格式数据.
      */
     public static String toJsonP(String functionName, Object object) {
         return toJson(new JSONPObject(functionName, object));
