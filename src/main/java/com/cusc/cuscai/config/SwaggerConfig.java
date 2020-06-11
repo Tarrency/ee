@@ -5,7 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -22,4 +24,15 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.cusc.cuscai.controller"))
                 .build();
     }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("智能问答系统 Swagger API")
+                .description("智能问答系统")
+                .termsOfServiceUrl("http://swagger.io/")
+                .version("0.1")
+                .build();
+
+    }
+
+
 }

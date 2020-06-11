@@ -20,7 +20,7 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableNeo4jRepositories
-@MapperScan("com.cusc.cuscai.dao")
+@MapperScan("com.cusc.cuscai.mapper")
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

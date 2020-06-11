@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cusc.cuscai.mapper.WordInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cusc.cuscai.entity.model.WordInfo" >
+    <id column="word_id" property="wordId" jdbcType="INTEGER" />
+    <result column="vocabulary_id" property="vocabularyId" jdbcType="INTEGER" />
+    <result column="word" property="word" jdbcType="VARCHAR" />
+    <result column="word_update_time" property="wordUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="BOResultMap" type="com.cusc.cuscai.entity.bo.WordInfoBO" extends="BaseResultMap" />
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    word_id, vocabulary_id, word, word_update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.cusc.cuscai.entity.model.WordInfoExample" resultMap="BOResultMap" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from word_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      limit ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BOResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from word_info
+    where word_id = #{wordId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from word_info
+    where word_id = #{wordId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cusc.cuscai.entity.model.WordInfoExample" >
+    delete from word_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cusc.cuscai.entity.model.WordInfo" >
+    insert into word_info (word_id, vocabulary_id, word, 
+      word_update_time)
+    values (#{wordId,jdbcType=INTEGER}, #{vocabularyId,jdbcType=INTEGER}, #{word,jdbcType=VARCHAR}, 
+      #{wordUpdateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cusc.cuscai.entity.model.WordInfo" >
+    insert into word_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="wordId != null" >
+        word_id,
+      </if>
+      <if test="vocabularyId != null" >
+        vocabulary_id,
+      </if>
+      <if test="word != null" >
+        word,
+      </if>
+      <if test="wordUpdateTime != null" >
+        word_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="wordId != null" >
+        #{wordId,jdbcType=INTEGER},
+      </if>
+      <if test="vocabularyId != null" >
+        #{vocabularyId,jdbcType=INTEGER},
+      </if>
+      <if test="word != null" >
+        #{word,jdbcType=VARCHAR},
+      </if>
+      <if test="wordUpdateTime != null" >
+        #{wordUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cusc.cuscai.entity.model.WordInfoExample" resultType="java.lang.Integer" >
+    select count(*) from word_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update word_info
+    <set >
+      <if test="record.wordId != null" >
+        word_id = #{record.wordId,jdbcType=INTEGER},
+      </if>
+      <if test="record.vocabularyId != null" >
+        vocabulary_id = #{record.vocabularyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.word != null" >
+        word = #{record.word,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wordUpdateTime != null" >
+        word_update_time = #{record.wordUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update word_info
+    set word_id = #{record.wordId,jdbcType=INTEGER},
+      vocabulary_id = #{record.vocabularyId,jdbcType=INTEGER},
+      word = #{record.word,jdbcType=VARCHAR},
+      word_update_time = #{record.wordUpdateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cusc.cuscai.entity.model.WordInfo" >
+    update word_info
+    <set >
+      <if test="vocabularyId != null" >
+        vocabulary_id = #{vocabularyId,jdbcType=INTEGER},
+      </if>
+      <if test="word != null" >
+        word = #{word,jdbcType=VARCHAR},
+      </if>
+      <if test="wordUpdateTime != null" >
+        word_update_time = #{wordUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where word_id = #{wordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cusc.cuscai.entity.model.WordInfo" >
+    update word_info
+    set vocabulary_id = #{vocabularyId,jdbcType=INTEGER},
+      word = #{word,jdbcType=VARCHAR},
+      word_update_time = #{wordUpdateTime,jdbcType=TIMESTAMP}
+    where word_id = #{wordId,jdbcType=INTEGER}
+  </update>
+
+
+  <insert id="insertBatch" parameterType="java.util.List" >
+    insert into word_info (word_id, vocabulary_id, word,
+      word_update_time)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{wordId,jdbcType=INTEGER}, #{vocabularyId,jdbcType=INTEGER}, #{word,jdbcType=VARCHAR},
+      #{wordUpdateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+</mapper>
