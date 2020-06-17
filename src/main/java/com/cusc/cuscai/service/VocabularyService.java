@@ -3,10 +3,13 @@ package com.cusc.cuscai.service;
 
 import com.cusc.cuscai.dao.VocabularyInfoDao;
 import com.cusc.cuscai.dao.WordInfoDao;
+import com.cusc.cuscai.entity.apibo.VocabularyBO;
+import com.cusc.cuscai.entity.apibo.WordBO;
 import com.cusc.cuscai.entity.bo.VocabularyInfoBO;
 import com.cusc.cuscai.entity.bo.WordInfoBO;
 import com.cusc.cuscai.entity.model.VocabularyInfo;
 import com.cusc.cuscai.entity.model.WordInfo;
+import com.cusc.cuscai.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,24 +27,41 @@ public class VocabularyService {
 
 
     //获取词表详情
-    public List<VocabularyInfoBO> getVocabularyList(int type) {
-        return vocabularydao.findByType(type);
+    public List<VocabularyBO> getVocabularyList(int type) {
+        List<VocabularyInfoBO> resdata = new ArrayList<VocabularyInfoBO>();
+        try {
+            resdata = vocabularydao.findByType(type);
+        }catch (Exception e){
+            throw e;
+        }
+        List<VocabularyBO> resbo = new ArrayList<VocabularyBO>();
+        for(VocabularyInfoBO bo : resdata){
+            resbo.add(new VocabularyBO(bo));
+        }
+        return resbo;
     }
 
+
     //获取词汇信息
-    public List<WordInfoBO> getWordList(int vcbid, String keyword) {
-        if(keyword == null || keyword.length()==0)
-           return worddao.findByVocabularyID(vcbid);
+    public List<WordBO> getWordList(int vcbid, String keyword) {
+        List<WordBO> resbo= new ArrayList<WordBO>();
+        List<WordInfoBO>  resdata= new ArrayList<WordInfoBO>();
+        if(keyword == null || keyword.length() ==0)
+            resdata = worddao.findByVocabularyID(vcbid);
         else
-            return worddao.findByVocabularyIDandKeyword(vcbid,keyword);
+            resdata =  worddao.findByVocabularyIDandKeyword(vcbid,keyword);
+        for(WordInfoBO bo :resdata){
+            resbo.add(new WordBO(bo));
+        }
+        return resbo;
     }
 
     //新增词表
     public void newVocabulary(String name, int type) {
-        VocabularyInfo vcb = new VocabularyInfo();
-        vcb.setName(name);
-        vcb.setType(type);
-        vocabularydao.save(vcb);
+            VocabularyInfo vcb = new VocabularyInfo();
+            vcb.setName(name);
+            vcb.setType(type);
+            vocabularydao.save(vcb);
     }
 
     //删除词表

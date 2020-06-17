@@ -2,6 +2,9 @@ package com.cusc.cuscai.entity.bo;
 
 
 import com.cusc.cuscai.entity.model.VocabularyInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Date;
 
 /**
  * 
@@ -10,5 +13,5 @@ import com.cusc.cuscai.entity.model.VocabularyInfo;
  */
 public class VocabularyInfoBO extends VocabularyInfo {
 
-	
+
 }
