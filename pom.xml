@@ -51,6 +51,12 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate.validator</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                </exclusion>
+            </exclusions>
             <version>1.3.0</version>
         </dependency>
 
@@ -58,6 +64,27 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>3.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.0-jre</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.noodle</groupId>
+            <artifactId>noodle-gen</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.1</version>
         </dependency>
     </dependencies>
     <build>
@@ -79,6 +106,7 @@
                 </executions>
             </plugin>
         </plugins>
+
     </build>
 
     <pluginRepositories>
@@ -88,5 +116,7 @@
             <url>https://maven.aliyun.com/repository/spring-plugin</url>
         </pluginRepository>
     </pluginRepositories>
+
+
 
 </project>
