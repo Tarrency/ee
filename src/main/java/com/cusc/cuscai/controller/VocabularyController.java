@@ -81,12 +81,16 @@ public class VocabularyController {
     @PostMapping("/addword")
     @ResponseBody
     @ApiOperation("添加词汇")
-    public Result addword(@RequestParam("type") @ApiParam(value = "词表ID", required = true) int vcbid,
+    public Result addword(@RequestParam("id") @ApiParam(value = "词表ID", required = true) int vcbid,
                           @RequestParam("words")  @ApiParam(value = "词语列表", required = true) List<String> words) {
+        int insertcount;
+        try{
+            insertcount = vocabularyService.insertWords(vcbid,words);
+        }catch (Exception e){
+            return Result.fail(40501,e.getMessage());
+        }
 
-        System.out.println(new java.util.Date()+"  "+words);
-        int insertcount = vocabularyService.insertWords(vcbid,words);
-        return Result.success("成功添加词汇"+insertcount+"条");
+        return Result.success("成功添加词汇");
     }
 
     @PostMapping ("/modify")

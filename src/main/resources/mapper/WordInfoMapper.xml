@@ -199,13 +199,13 @@
   </update>
 
 
-  <insert id="insertBatch" parameterType="java.util.List" >
+  <insert id="insertBatch"  >
     insert into word_info (word_id, vocabulary_id, word,
       word_update_time)
     values
     <foreach collection="list" item="item" index="index" separator=",">
-    (#{wordId,jdbcType=INTEGER}, #{vocabularyId,jdbcType=INTEGER}, #{word,jdbcType=VARCHAR},
-      #{wordUpdateTime,jdbcType=TIMESTAMP})
+    (DEFAULT , #{item.vocabularyId,jdbcType=INTEGER}, #{item.word,jdbcType=VARCHAR},
+      #{item.wordUpdateTime,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
 </mapper>
