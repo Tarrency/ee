@@ -35,8 +35,9 @@ public class Result {
     public static Result success(String msg, Object data) {
         return new Result(0, msg, data);
     }
+
     //返回正确
-    public static Result success(int code,String msg, Object data) {
+    public static Result success(int code, String msg, Object data) {
         return new Result(code, msg, data);
     }
 
