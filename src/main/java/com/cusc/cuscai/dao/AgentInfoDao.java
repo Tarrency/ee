@@ -50,12 +50,15 @@ public class AgentInfoDao {
 	/**
 	 * 按adminId查找该管理员创建的所有agent
 	 * @param adminId 管理员id
-	 * @param agentName agent名称
+	 * @param agentName agent名称,可空。若为空，则返回全部数据。
 	 * @return agent列表
 	 */
 	public List<AgentInfoBO> findByAdminAndName(java.lang.Integer adminId, String agentName) {
 		AgentInfoExample example = new AgentInfoExample();
-		example.createCriteria().andAdminIdEqualTo(adminId).andAgentNameLike(agentName);
+		AgentInfoExample.Criteria c = example.createCriteria().andAdminIdEqualTo(adminId);
+		if (agentName != null && !agentName.isEmpty()) {
+			c.andAgentNameLike(agentName);
+		}
 		return mapper.selectByExample(example);
 	}
 
