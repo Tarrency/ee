@@ -41,6 +41,11 @@ public class Result {
         return new Result(code, msg, data);
     }
 
+    //返回正确
+    public static Result success(int code, String msg) {
+        return new Result(code, msg, null);
+    }
+
     //返回错误
     public static Result fail(Integer code, String msg) {
         return new Result(code, msg, null);

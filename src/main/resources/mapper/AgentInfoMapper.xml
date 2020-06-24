@@ -1,34 +1,34 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.cusc.cuscai.mapper.AgentInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.cusc.cuscai.entity.model.AgentInfo" >
-    <id column="agent_id" property="agentId" jdbcType="INTEGER" />
-    <result column="admin_id" property="adminId" jdbcType="INTEGER" />
-    <result column="agent_name" property="agentName" jdbcType="VARCHAR" />
-    <result column="agent_status" property="agentStatus" jdbcType="INTEGER" />
-    <result column="agent_create_time" property="agentCreateTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cusc.cuscai.mapper.AgentInfoMapper">
+  <resultMap id="BaseResultMap" type="com.cusc.cuscai.entity.model.AgentInfo">
+    <id column="agent_id" jdbcType="INTEGER" property="agentId" />
+    <result column="admin_id" jdbcType="INTEGER" property="adminId" />
+    <result column="agent_name" jdbcType="VARCHAR" property="agentName" />
+    <result column="agent_status" jdbcType="INTEGER" property="agentStatus" />
+    <result column="agent_create_time" jdbcType="TIMESTAMP" property="agentCreateTime" />
+    <result column="agent_update_time" jdbcType="TIMESTAMP" property="agentUpdateTime" />
   </resultMap>
-  <resultMap id="BOResultMap" type="com.cusc.cuscai.entity.bo.AgentInfoBO" extends="BaseResultMap" />
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <resultMap extends="BaseResultMap" id="BOResultMap" type="com.cusc.cuscai.entity.bo.AgentInfoBO" />
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -39,25 +39,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -68,165 +68,165 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
-    agent_id, admin_id, agent_name, agent_status, agent_create_time, update_time
+  <sql id="Base_Column_List">
+    agent_id, admin_id, agent_name, agent_status, agent_create_time, agent_update_time
   </sql>
-  <select id="selectByExample" parameterType="com.cusc.cuscai.entity.model.AgentInfoExample" resultMap="BOResultMap" >
+  <select id="selectByExample" parameterType="com.cusc.cuscai.entity.model.AgentInfoExample" resultMap="BOResultMap">
     select
-    <if test="distinct" >
+    <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
     from agent_info
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
+    <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
-    <if test="limit != null" >
+    <if test="limit != null">
       limit ${limit}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BOResultMap" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BOResultMap">
     select 
     <include refid="Base_Column_List" />
     from agent_info
     where agent_id = #{agentId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from agent_info
     where agent_id = #{agentId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.cusc.cuscai.entity.model.AgentInfoExample" >
+  <delete id="deleteByExample" parameterType="com.cusc.cuscai.entity.model.AgentInfoExample">
     delete from agent_info
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cusc.cuscai.entity.model.AgentInfo" >
+  <insert id="insert" parameterType="com.cusc.cuscai.entity.model.AgentInfo">
     insert into agent_info (agent_id, admin_id, agent_name, 
-      agent_status, agent_create_time, update_time
+      agent_status, agent_create_time, agent_update_time
       )
     values (#{agentId,jdbcType=INTEGER}, #{adminId,jdbcType=INTEGER}, #{agentName,jdbcType=VARCHAR}, 
-      #{agentStatus,jdbcType=INTEGER}, #{agentCreateTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{agentStatus,jdbcType=INTEGER}, #{agentCreateTime,jdbcType=TIMESTAMP}, #{agentUpdateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.cusc.cuscai.entity.model.AgentInfo" >
+  <insert id="insertSelective" parameterType="com.cusc.cuscai.entity.model.AgentInfo">
     insert into agent_info
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="agentId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="agentId != null">
         agent_id,
       </if>
-      <if test="adminId != null" >
+      <if test="adminId != null">
         admin_id,
       </if>
-      <if test="agentName != null" >
+      <if test="agentName != null">
         agent_name,
       </if>
-      <if test="agentStatus != null" >
+      <if test="agentStatus != null">
         agent_status,
       </if>
-      <if test="agentCreateTime != null" >
+      <if test="agentCreateTime != null">
         agent_create_time,
       </if>
-      <if test="updateTime != null" >
-        update_time,
+      <if test="agentUpdateTime != null">
+        agent_update_time,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="agentId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="agentId != null">
         #{agentId,jdbcType=INTEGER},
       </if>
-      <if test="adminId != null" >
+      <if test="adminId != null">
         #{adminId,jdbcType=INTEGER},
       </if>
-      <if test="agentName != null" >
+      <if test="agentName != null">
         #{agentName,jdbcType=VARCHAR},
       </if>
-      <if test="agentStatus != null" >
+      <if test="agentStatus != null">
         #{agentStatus,jdbcType=INTEGER},
       </if>
-      <if test="agentCreateTime != null" >
+      <if test="agentCreateTime != null">
         #{agentCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="agentUpdateTime != null">
+        #{agentUpdateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.cusc.cuscai.entity.model.AgentInfoExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.cusc.cuscai.entity.model.AgentInfoExample" resultType="java.lang.Integer">
     select count(*) from agent_info
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <update id="updateByExampleSelective" parameterType="map">
     update agent_info
-    <set >
-      <if test="record.agentId != null" >
+    <set>
+      <if test="record.agentId != null">
         agent_id = #{record.agentId,jdbcType=INTEGER},
       </if>
-      <if test="record.adminId != null" >
+      <if test="record.adminId != null">
         admin_id = #{record.adminId,jdbcType=INTEGER},
       </if>
-      <if test="record.agentName != null" >
+      <if test="record.agentName != null">
         agent_name = #{record.agentName,jdbcType=VARCHAR},
       </if>
-      <if test="record.agentStatus != null" >
+      <if test="record.agentStatus != null">
         agent_status = #{record.agentStatus,jdbcType=INTEGER},
       </if>
-      <if test="record.agentCreateTime != null" >
+      <if test="record.agentCreateTime != null">
         agent_create_time = #{record.agentCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      <if test="record.agentUpdateTime != null">
+        agent_update_time = #{record.agentUpdateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
+  <update id="updateByExample" parameterType="map">
     update agent_info
     set agent_id = #{record.agentId,jdbcType=INTEGER},
       admin_id = #{record.adminId,jdbcType=INTEGER},
       agent_name = #{record.agentName,jdbcType=VARCHAR},
       agent_status = #{record.agentStatus,jdbcType=INTEGER},
       agent_create_time = #{record.agentCreateTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
+      agent_update_time = #{record.agentUpdateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cusc.cuscai.entity.model.AgentInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.cusc.cuscai.entity.model.AgentInfo">
     update agent_info
-    <set >
-      <if test="adminId != null" >
+    <set>
+      <if test="adminId != null">
         admin_id = #{adminId,jdbcType=INTEGER},
       </if>
-      <if test="agentName != null" >
+      <if test="agentName != null">
         agent_name = #{agentName,jdbcType=VARCHAR},
       </if>
-      <if test="agentStatus != null" >
+      <if test="agentStatus != null">
         agent_status = #{agentStatus,jdbcType=INTEGER},
       </if>
-      <if test="agentCreateTime != null" >
+      <if test="agentCreateTime != null">
         agent_create_time = #{agentCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="agentUpdateTime != null">
+        agent_update_time = #{agentUpdateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where agent_id = #{agentId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cusc.cuscai.entity.model.AgentInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.cusc.cuscai.entity.model.AgentInfo">
     update agent_info
     set admin_id = #{adminId,jdbcType=INTEGER},
       agent_name = #{agentName,jdbcType=VARCHAR},
       agent_status = #{agentStatus,jdbcType=INTEGER},
       agent_create_time = #{agentCreateTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      agent_update_time = #{agentUpdateTime,jdbcType=TIMESTAMP}
     where agent_id = #{agentId,jdbcType=INTEGER}
   </update>
 </mapper>

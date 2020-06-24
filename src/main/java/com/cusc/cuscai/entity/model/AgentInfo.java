@@ -1,7 +1,8 @@
 package com.cusc.cuscai.entity.model;
 
-import java.util.Date;
 import org.noodle.base.BaseModel;
+
+import java.util.Date;
 
 public class AgentInfo extends BaseModel {
     /**  **/
@@ -20,7 +21,7 @@ public class AgentInfo extends BaseModel {
     private Date agentCreateTime;
 
     /** 更新时间 **/
-    private Date updateTime;
+    private Date agentUpdateTime;
 
     public Integer getAgentId() {
         return agentId;
@@ -62,11 +63,11 @@ public class AgentInfo extends BaseModel {
         this.agentCreateTime = agentCreateTime;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public Date getAgentUpdateTime() {
+        return agentUpdateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setAgentUpdateTime(Date agentUpdateTime) {
+        this.agentUpdateTime = agentUpdateTime;
     }
 }

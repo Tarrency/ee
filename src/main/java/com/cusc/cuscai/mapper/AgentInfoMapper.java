@@ -3,12 +3,11 @@ package com.cusc.cuscai.mapper;
 import com.cusc.cuscai.entity.bo.AgentInfoBO;
 import com.cusc.cuscai.entity.model.AgentInfo;
 import com.cusc.cuscai.entity.model.AgentInfoExample;
-import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
+import java.util.List;
+
 public interface AgentInfoMapper {
     int countByExample(AgentInfoExample example);
 

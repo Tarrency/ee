@@ -1,10 +1,13 @@
 package com.cusc.cuscai.entity.model;
 
+
 import com.cusc.cuscai.entity.bo.AgentInfoBO;
+
+import org.noodle.base.AbstractExample;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.noodle.base.AbstractExample;
 
 public class AgentInfoExample extends AbstractExample<AgentInfoBO> {
     protected String orderByClause;
@@ -435,63 +438,63 @@ public class AgentInfoExample extends AbstractExample<AgentInfoBO> {
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeIsNull() {
-            addCriterion("update_time is null");
+        public Criteria andAgentUpdateTimeIsNull() {
+            addCriterion("agent_update_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeIsNotNull() {
-            addCriterion("update_time is not null");
+        public Criteria andAgentUpdateTimeIsNotNull() {
+            addCriterion("agent_update_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeEqualTo(Date value) {
-            addCriterion("update_time =", value, "updateTime");
+        public Criteria andAgentUpdateTimeEqualTo(Date value) {
+            addCriterion("agent_update_time =", value, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeNotEqualTo(Date value) {
-            addCriterion("update_time <>", value, "updateTime");
+        public Criteria andAgentUpdateTimeNotEqualTo(Date value) {
+            addCriterion("agent_update_time <>", value, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeGreaterThan(Date value) {
-            addCriterion("update_time >", value, "updateTime");
+        public Criteria andAgentUpdateTimeGreaterThan(Date value) {
+            addCriterion("agent_update_time >", value, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("update_time >=", value, "updateTime");
+        public Criteria andAgentUpdateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("agent_update_time >=", value, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeLessThan(Date value) {
-            addCriterion("update_time <", value, "updateTime");
+        public Criteria andAgentUpdateTimeLessThan(Date value) {
+            addCriterion("agent_update_time <", value, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
-            addCriterion("update_time <=", value, "updateTime");
+        public Criteria andAgentUpdateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("agent_update_time <=", value, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeIn(List<Date> values) {
-            addCriterion("update_time in", values, "updateTime");
+        public Criteria andAgentUpdateTimeIn(List<Date> values) {
+            addCriterion("agent_update_time in", values, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeNotIn(List<Date> values) {
-            addCriterion("update_time not in", values, "updateTime");
+        public Criteria andAgentUpdateTimeNotIn(List<Date> values) {
+            addCriterion("agent_update_time not in", values, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
-            addCriterion("update_time between", value1, value2, "updateTime");
+        public Criteria andAgentUpdateTimeBetween(Date value1, Date value2) {
+            addCriterion("agent_update_time between", value1, value2, "agentUpdateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
-            addCriterion("update_time not between", value1, value2, "updateTime");
+        public Criteria andAgentUpdateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("agent_update_time not between", value1, value2, "agentUpdateTime");
             return (Criteria) this;
         }
     }
