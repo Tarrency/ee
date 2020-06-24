@@ -72,53 +72,41 @@ public class AgentService {
      * agentDatabase = {"agentName":电信，"QA":电信史,"scene":问答,"词表":禁用敏感词库、电信词库}
      */
     public Integer newAgent(Integer adminID, String agentDatabase) {
-        JSONObject obj = JSON.parseObject(agentDatabase);
-        String agentName = obj.getString("agentName");
-        String QA = obj.getString("QA");
-        List<Integer> QA_ids = new ArrayList<>();
-        for (String s : QA.split(",")) {
-            QA_ids.add(Integer.valueOf(s));
-        }
-        String scene = obj.getString("scene");
-        List<Integer> scene_ids = new ArrayList<>();
-        for (String s : scene.split(",")) {
-            scene_ids.add(Integer.valueOf(s));
-        }
-        String voc = obj.getString("voc");
-        List<Integer> voc_ids = new ArrayList<>();
-        for (String s : voc.split(",")) {
-            voc_ids.add(Integer.valueOf(s));
-        }
         try {
-            return agentInfoDao.newAgent(adminID, agentName, QA_ids, scene_ids, voc_ids);
+            JSONObject obj = JSON.parseObject(agentDatabase);
+            String agentName = obj.getString("agentName");
+            List<Integer> QA_ids = splitAsInteger(obj.getString("QA"));
+            List<Integer> scene_ids = splitAsInteger(obj.getString("scene"));
+            List<Integer> kg_ids = splitAsInteger(obj.getString("kg"));
+            List<Integer> voc_ids = splitAsInteger(obj.getString("voc"));
+            return agentInfoDao.newAgent(adminID, agentName, QA_ids, scene_ids, kg_ids, voc_ids);
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    List<Integer> splitAsInteger(String text) {
+        List<Integer> ids = new ArrayList<>();
+        for (String s : text.split(",")) {
+            if (!s.isEmpty()) {
+                ids.add(Integer.valueOf(s));
+            }
+        }
+        return ids;
     }
 
     /**
      * agentDatabase = {"agentName":电信，"QA":电信史,"scene":问答,"词表":禁用敏感词库、电信词库}
      */
     public void changeAgent(Integer adminID, Integer agentID, String agentDatabase) {
-        JSONObject obj = JSON.parseObject(agentDatabase);
-        String agentName = obj.getString("agentName");
-        String QA = obj.getString("QA");
-        List<Integer> QA_ids = new ArrayList<>();
-        for (String s : QA.split(",")) {
-            QA_ids.add(Integer.valueOf(s));
-        }
-        String scene = obj.getString("scene");
-        List<Integer> scene_ids = new ArrayList<>();
-        for (String s : scene.split(",")) {
-            scene_ids.add(Integer.valueOf(s));
-        }
-        String voc = obj.getString("voc");
-        List<Integer> voc_ids = new ArrayList<>();
-        for (String s : voc.split(",")) {
-            voc_ids.add(Integer.valueOf(s));
-        }
         try {
-            agentInfoDao.changeAgent(adminID, agentID, agentName, QA_ids, scene_ids, voc_ids);
+            JSONObject obj = JSON.parseObject(agentDatabase);
+            String agentName = obj.getString("agentName");
+            List<Integer> QA_ids = splitAsInteger(obj.getString("QA"));
+            List<Integer> scene_ids = splitAsInteger(obj.getString("scene"));
+            List<Integer> kg_ids = splitAsInteger(obj.getString("kg"));
+            List<Integer> voc_ids = splitAsInteger(obj.getString("voc"));
+            agentInfoDao.changeAgent(adminID, agentID, agentName, QA_ids, scene_ids, kg_ids, voc_ids);
         } catch (Exception e) {
             throw e;
         }

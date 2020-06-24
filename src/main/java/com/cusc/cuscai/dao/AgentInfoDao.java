@@ -75,10 +75,21 @@ public class AgentInfoDao {
 		return mapper.selectByExample(example);
 	}
 
+	/**
+	 *
+	 * @param adminID 管理员id
+	 * @param agentName agent名字
+	 * @param QA_ids QA
+	 * @param scene_ids 多轮对话
+	 * @param kg_ids 知识图谱
+	 * @param voc_ids 词表
+	 * @return
+	 */
 	@Transactional
 	public Integer newAgent(java.lang.Integer adminID, String agentName,
 			List<java.lang.Integer> QA_ids,
 			List<java.lang.Integer> scene_ids,
+			List<java.lang.Integer> kg_ids,
 			List<java.lang.Integer> voc_ids) {
 		TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
 		return transactionTemplate.execute(txStatus -> {
@@ -91,44 +102,54 @@ public class AgentInfoDao {
 			save(agentInfo);
 			//写联表
 			int agentId = agentInfo.getAgentId();
-			//删除已有的
+			//删除已有的 TODO 这里没有多轮对话的表，所以跳过了，以后记得加上
 			AgentMountQAExample example=new AgentMountQAExample();
 			example.createCriteria().andAgentIdEqualTo(agentId);
-			QAmapper.deleteByExample(example);
+			QAmapper.deleteByExample(example);//删除QA
 			AgentMountKGExample example1=new AgentMountKGExample();
 			example.createCriteria().andAgentIdEqualTo(agentId);
-			KGmapper.deleteByExample(example1);
+			KGmapper.deleteByExample(example1);//删除知识图谱
 			AgentMountWDExample example2=new AgentMountWDExample();
 			example.createCriteria().andAgentIdEqualTo(agentId);
-			WDmapper.deleteByExample(example2);
+			WDmapper.deleteByExample(example2);//删除词表
 
-			//插入新的
+			//插入新的 TODO 这里没有多轮对话的表，所以跳过了，以后记得加上
 			for (Integer id :QA_ids){
 				AgentMountQA agentMountQA = new AgentMountQA();
 				agentMountQA.setAgentId(agentId);
 				agentMountQA.setQaId(id);
-				QAmapper.insert(agentMountQA);
+				QAmapper.insert(agentMountQA);//添加QA
 			}
-			for (Integer id :scene_ids){
+			for (Integer id :kg_ids){
 				AgentMountKG agentMountKG = new AgentMountKG();
 				agentMountKG.setAgentId(agentId);
 				agentMountKG.setKgId(id);
-				KGmapper.insert(agentMountKG);
+				KGmapper.insert(agentMountKG);//添加知识图谱
 			}
 			for (Integer id :voc_ids){
 				AgentMountWD agentMountWD = new AgentMountWD();
 				agentMountWD.setAgentId(agentId);
 				agentMountWD.setWdId(id);
-				WDmapper.insert(agentMountWD);
+				WDmapper.insert(agentMountWD);//添加词表
 			}
 			return agentInfo.getAgentId();
 		});
 	}
-
+	/**
+	 *
+	 * @param adminID 管理员id
+	 * @param agentName agent名字
+	 * @param QA_ids QA
+	 * @param scene_ids 多轮对话
+	 * @param kg_ids 知识图谱
+	 * @param voc_ids 词表
+	 * @return
+	 */
 	@Transactional
 	public void changeAgent(java.lang.Integer adminID, java.lang.Integer agentID, String agentName,
 			List<java.lang.Integer> QA_ids,
 			List<java.lang.Integer> scene_ids,
+			List<java.lang.Integer> kg_ids,
 			List<java.lang.Integer> voc_ids) {
 		TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
 		transactionTemplate.execute(txStatus -> {
@@ -139,7 +160,7 @@ public class AgentInfoDao {
 			save(agentInfo);
 			//写联表
 			int agentId = agentInfo.getAgentId();
-			//删除已有的
+			//删除已有的 TODO 这里没有多轮对话的表，所以跳过了，以后记得加上
 			AgentMountQAExample example=new AgentMountQAExample();
 			example.createCriteria().andAgentIdEqualTo(agentId);
 			QAmapper.deleteByExample(example);
@@ -150,14 +171,14 @@ public class AgentInfoDao {
 			example.createCriteria().andAgentIdEqualTo(agentId);
 			WDmapper.deleteByExample(example2);
 
-			//插入新的
+			//插入新的 TODO 这里没有多轮对话的表，所以跳过了，以后记得加上
 			for (Integer id :QA_ids){
 				AgentMountQA agentMountQA = new AgentMountQA();
 				agentMountQA.setAgentId(agentId);
 				agentMountQA.setQaId(id);
 				QAmapper.insert(agentMountQA);
 			}
-			for (Integer id :scene_ids){
+			for (Integer id :kg_ids){
 				AgentMountKG agentMountKG = new AgentMountKG();
 				agentMountKG.setAgentId(agentId);
 				agentMountKG.setKgId(id);
