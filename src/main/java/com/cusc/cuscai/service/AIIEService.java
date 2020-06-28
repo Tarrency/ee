@@ -1,8 +1,7 @@
 package com.cusc.cuscai.service;
 
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -12,7 +11,7 @@ import java.util.Map;
 @Service
 public class AIIEService {
 
-    public void getQAModels(){
+    public void getQAModels() {
 
     }
 
@@ -27,7 +26,7 @@ public class AIIEService {
                 return null;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             return null;
         }
     }
@@ -46,7 +45,29 @@ public class AIIEService {
                 return null;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject postResponse(String Url, String subUrl, JSONObject params) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+
+        String url = Url + subUrl;
+        try {
+            HttpEntity<String> formEntity = new HttpEntity<>(params.toJSONString(), headers);
+            ResponseEntity<JSONObject> responseEntity = restTemplate.postForEntity(url, formEntity, JSONObject.class);
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                return responseEntity.getBody();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
