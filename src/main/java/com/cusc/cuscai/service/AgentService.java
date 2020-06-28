@@ -26,10 +26,10 @@ public class AgentService {
         try {
             return agentInfoDao.exists(agentId);
         } catch (DataAccessException e) {
-            System.out.println(e);
+            e.printStackTrace();
             throw new GlobalException(500, "数据库异常！");
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             throw new GlobalException(500, "未知异常！");
         }
     }
@@ -40,6 +40,7 @@ public class AgentService {
         try {
             resdata = agentInfoDao.findByAdminAndName(adminID, agentName);
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
         List<AgentBO> resbo = new ArrayList<>();
@@ -55,6 +56,7 @@ public class AgentService {
         try {
             resdata = agentInfoDao.findByAdminAndId(adminID, agentID);
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
         if (resdata == null || resdata.isEmpty()) {
@@ -64,8 +66,8 @@ public class AgentService {
         }
     }
 
-    public void deleteAgent(Integer agentID) {
-        agentInfoDao.delete(agentID);
+    public void deleteAgent(Integer adminID, Integer agentID) {
+        agentInfoDao.delete(adminID, agentID);
     }
 
     /**
@@ -81,6 +83,7 @@ public class AgentService {
             List<Integer> voc_ids = splitAsInteger(obj.getString("voc"));
             return agentInfoDao.newAgent(adminID, agentName, QA_ids, scene_ids, kg_ids, voc_ids);
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
     }
@@ -108,6 +111,7 @@ public class AgentService {
             List<Integer> voc_ids = splitAsInteger(obj.getString("voc"));
             agentInfoDao.changeAgent(adminID, agentID, agentName, QA_ids, scene_ids, kg_ids, voc_ids);
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
     }
