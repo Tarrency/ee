@@ -9,7 +9,7 @@ public class AgentMountKG extends BaseModel {
     /** agent id **/
     private Integer agentId;
 
-    /** 知识图谱数据表id **/
+    /** 鐭ヨ瘑鍥捐氨鏁版嵁琛╥d **/
     private Integer kgId;
 
     public Integer getId() {
