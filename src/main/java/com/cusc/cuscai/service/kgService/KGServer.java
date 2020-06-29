@@ -3,7 +3,6 @@ package com.cusc.cuscai.service.kgService;
 import com.cusc.cuscai.entity.kgEntity.Chairman;
 import com.cusc.cuscai.entity.kgEntity.Organization;
 import com.cusc.cuscai.entity.kgEntity.Person;
-import com.sun.tools.corba.se.idl.constExpr.Or;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
