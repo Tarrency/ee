@@ -9,7 +9,7 @@ public class AgentMountWD extends BaseModel {
     /** agent id **/
     private Integer agentId;
 
-    /** ´Ê±íid **/
+    /** è¯è¡¨id **/
     private Integer wdId;
 
     public Integer getId() {

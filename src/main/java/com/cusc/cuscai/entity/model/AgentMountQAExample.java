@@ -1,9 +1,11 @@
 package com.cusc.cuscai.entity.model;
 
 import com.cusc.cuscai.entity.bo.AgentMountQABO;
+
+import org.noodle.base.AbstractExample;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.noodle.base.AbstractExample;
 
 public class AgentMountQAExample extends AbstractExample<AgentMountQABO> {
     protected String orderByClause;

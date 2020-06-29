@@ -25,3 +25,8 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+
+remote-ai:
+  qaai:
+    url: http://10.108.211.93:7662
+

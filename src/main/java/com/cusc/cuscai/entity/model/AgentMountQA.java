@@ -9,7 +9,7 @@ public class AgentMountQA extends BaseModel {
     /** agent id **/
     private Integer agentId;
 
-    /** qa֪ʶ���id **/
+    /** qa知识库表id **/
     private Integer qaId;
 
     public Integer getId() {

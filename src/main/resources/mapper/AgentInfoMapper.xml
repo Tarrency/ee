@@ -104,7 +104,8 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cusc.cuscai.entity.model.AgentInfo">
+  <insert id="insert" parameterType="com.cusc.cuscai.entity.model.AgentInfo"
+          useGeneratedKeys="true" keyProperty="agentId">
     insert into agent_info (agent_id, admin_id, agent_name, 
       agent_status, agent_create_time, agent_update_time
       )
@@ -112,7 +113,8 @@
       #{agentStatus,jdbcType=INTEGER}, #{agentCreateTime,jdbcType=TIMESTAMP}, #{agentUpdateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.cusc.cuscai.entity.model.AgentInfo">
+  <insert id="insertSelective" parameterType="com.cusc.cuscai.entity.model.AgentInfo"
+          useGeneratedKeys="true" keyProperty="agentId">
     insert into agent_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="agentId != null">

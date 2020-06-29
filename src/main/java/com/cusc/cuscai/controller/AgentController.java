@@ -67,10 +67,11 @@ class AgentController {
     @ResponseBody
     @ApiOperation("删除Agent")
     public Result deleteAgent(
+            @RequestParam("adminID") @ApiParam(value = "管理员用户id", required = true) int adminID,
             @RequestParam("agentID") @ApiParam(value = "要删除的Agent id", required = true) int agentID
     ) {
         try {
-            agentService.deleteAgent(agentID);
+            agentService.deleteAgent(adminID, agentID);
         } catch (Exception e) {
             return Result.fail(40601, e.getMessage());
         }
