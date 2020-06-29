@@ -11,23 +11,19 @@ import org.neo4j.ogm.annotation.Property;
 @Data
 @NodeEntity(label = "组织")
 @ApiModel("组织")
-public class Organization extends Base {
+public class Organization{
     @Id
     @GeneratedValue
-    @ApiModelProperty(value = "id", required = true)
+    @ApiModelProperty(value = "id")
     protected Long id;
 
     @Property(name = "name")
-    @ApiModelProperty(value = "姓名", required = true)
+    @ApiModelProperty(value = "姓名")
     protected String name;
 
     @Property(name = "描述")
     @ApiModelProperty(value = "描述")
     private String desc;
-
-    @Property(name = "别名")
-    @ApiModelProperty(value = "别名")
-    private String otherName;
 
     @Property(name="口号")
     @ApiModelProperty(value = "口号")
@@ -42,18 +38,12 @@ public class Organization extends Base {
     private String mission;
 
     @Property(name="价值观")
-    @ApiModelProperty(value = "价值观")
+    @ApiModelProperty(value = "核心价值观")
     private String value;
 
     @Property(name="理念")
-    @ApiModelProperty(value = "理念")
+    @ApiModelProperty(value = "经营管理理念")
     private String idea;
-
-    @Property(name="组织")
-    @ApiModelProperty(value = "组织")
-    private String organziation;
-
-
 
 
 }

@@ -5,9 +5,11 @@ server:
 spring:
   data:
     neo4j:
-      uri: bolt://39.102.46.180:7687
+      #数据库uri地址
+      uri: bolt://39.102.46.180:7687  # bolt://localhost:7687
+      #Neo4j配置
       username: neo4j
-      password: neo4j
+      password: 123456
   datasource:
     url: jdbc:mysql://39.102.46.180:3306/CUQADatabase?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: cuqa
