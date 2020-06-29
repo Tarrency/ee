@@ -5,9 +5,9 @@ server:
 spring:
   data:
     neo4j:
-      #数据库uri地址
+      # 数据库uri地址
       uri: bolt://39.102.46.180:7687  # bolt://localhost:7687
-      #Neo4j配置
+      # Neo4j配置
       username: neo4j
       password: 123456
   datasource:
