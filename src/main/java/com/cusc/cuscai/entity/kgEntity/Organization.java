@@ -37,11 +37,11 @@ public class Organization{
     @ApiModelProperty(value = "使命")
     private String mission;
 
-    @Property(name="价值观")
+    @Property(name="核心价值观")
     @ApiModelProperty(value = "核心价值观")
     private String value;
 
-    @Property(name="理念")
+    @Property(name="经营管理理念")
     @ApiModelProperty(value = "经营管理理念")
     private String idea;
 
