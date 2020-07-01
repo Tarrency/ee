@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dao.AgentInfoDao;
 import com.cusc.cuscai.entity.apibo.AgentBO;
+import com.cusc.cuscai.entity.apibo.AgentModelBO;
 import com.cusc.cuscai.entity.bo.AgentInfoBO;
 import com.cusc.cuscai.exception.GlobalException;
 
@@ -114,5 +115,17 @@ public class AgentService {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    /**
+     * 查找所有model，并返回modelType
+     * @param agentID 必选， agent 的 id
+     * @return AgentModelBO
+     */
+    public AgentModelBO searchAgentModels(int agentID) {
+        int modelType = 0;//QA
+        List<Integer> modelIds = new ArrayList<>();
+        AgentModelBO resdata = new AgentModelBO(modelType, modelIds);
+        return resdata;
     }
 }
