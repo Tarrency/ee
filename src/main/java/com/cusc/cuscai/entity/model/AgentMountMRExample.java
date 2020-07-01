@@ -1,13 +1,11 @@
 package com.cusc.cuscai.entity.model;
 
-import com.cusc.cuscai.entity.bo.AgentMountWDBO;
-
-import org.noodle.base.AbstractExample;
-
+import com.cusc.cuscai.entity.bo.AgentMountMRBO;
 import java.util.ArrayList;
 import java.util.List;
+import org.noodle.base.AbstractExample;
 
-public class AgentMountWDExample extends AbstractExample<AgentMountWDBO> {
+public class AgentMountMRExample extends AbstractExample<AgentMountMRBO> {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -16,7 +14,7 @@ public class AgentMountWDExample extends AbstractExample<AgentMountWDBO> {
 
     protected String limit;
 
-    public AgentMountWDExample() {
+    public AgentMountMRExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -246,73 +244,73 @@ public class AgentMountWDExample extends AbstractExample<AgentMountWDBO> {
             return (Criteria) this;
         }
 
-        public Criteria andWdIdIsNull() {
-            addCriterion("wd_id is null");
+        public Criteria andMrIdIsNull() {
+            addCriterion("mr_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdIsNotNull() {
-            addCriterion("wd_id is not null");
+        public Criteria andMrIdIsNotNull() {
+            addCriterion("mr_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdEqualTo(String value) {
-            addCriterion("wd_id =", value, "wdId");
+        public Criteria andMrIdEqualTo(String value) {
+            addCriterion("mr_id =", value, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdNotEqualTo(String value) {
-            addCriterion("wd_id <>", value, "wdId");
+        public Criteria andMrIdNotEqualTo(String value) {
+            addCriterion("mr_id <>", value, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdGreaterThan(String value) {
-            addCriterion("wd_id >", value, "wdId");
+        public Criteria andMrIdGreaterThan(String value) {
+            addCriterion("mr_id >", value, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdGreaterThanOrEqualTo(String value) {
-            addCriterion("wd_id >=", value, "wdId");
+        public Criteria andMrIdGreaterThanOrEqualTo(String value) {
+            addCriterion("mr_id >=", value, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdLessThan(String value) {
-            addCriterion("wd_id <", value, "wdId");
+        public Criteria andMrIdLessThan(String value) {
+            addCriterion("mr_id <", value, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdLessThanOrEqualTo(String value) {
-            addCriterion("wd_id <=", value, "wdId");
+        public Criteria andMrIdLessThanOrEqualTo(String value) {
+            addCriterion("mr_id <=", value, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdLike(String value) {
-            addCriterion("wd_id like", value, "wdId");
+        public Criteria andMrIdLike(String value) {
+            addCriterion("mr_id like", value, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdNotLike(String value) {
-            addCriterion("wd_id not like", value, "wdId");
+        public Criteria andMrIdNotLike(String value) {
+            addCriterion("mr_id not like", value, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdIn(List<String> values) {
-            addCriterion("wd_id in", values, "wdId");
+        public Criteria andMrIdIn(List<String> values) {
+            addCriterion("mr_id in", values, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdNotIn(List<String> values) {
-            addCriterion("wd_id not in", values, "wdId");
+        public Criteria andMrIdNotIn(List<String> values) {
+            addCriterion("mr_id not in", values, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdBetween(String value1, String value2) {
-            addCriterion("wd_id between", value1, value2, "wdId");
+        public Criteria andMrIdBetween(String value1, String value2) {
+            addCriterion("mr_id between", value1, value2, "mrId");
             return (Criteria) this;
         }
 
-        public Criteria andWdIdNotBetween(String value1, String value2) {
-            addCriterion("wd_id not between", value1, value2, "wdId");
+        public Criteria andMrIdNotBetween(String value1, String value2) {
+            addCriterion("mr_id not between", value1, value2, "mrId");
             return (Criteria) this;
         }
     }

@@ -1,13 +1,10 @@
 package com.cusc.cuscai.entity.model;
 
-
 import com.cusc.cuscai.entity.bo.AgentInfoBO;
-
-import org.noodle.base.AbstractExample;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.noodle.base.AbstractExample;
 
 public class AgentInfoExample extends AbstractExample<AgentInfoBO> {
     protected String orderByClause;
@@ -495,6 +492,66 @@ public class AgentInfoExample extends AbstractExample<AgentInfoBO> {
 
         public Criteria andAgentUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("agent_update_time not between", value1, value2, "agentUpdateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeIsNull() {
+            addCriterion("model_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeIsNotNull() {
+            addCriterion("model_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeEqualTo(Integer value) {
+            addCriterion("model_type =", value, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeNotEqualTo(Integer value) {
+            addCriterion("model_type <>", value, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeGreaterThan(Integer value) {
+            addCriterion("model_type >", value, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("model_type >=", value, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeLessThan(Integer value) {
+            addCriterion("model_type <", value, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("model_type <=", value, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeIn(List<Integer> values) {
+            addCriterion("model_type in", values, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeNotIn(List<Integer> values) {
+            addCriterion("model_type not in", values, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeBetween(Integer value1, Integer value2) {
+            addCriterion("model_type between", value1, value2, "modelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("model_type not between", value1, value2, "modelType");
             return (Criteria) this;
         }
     }

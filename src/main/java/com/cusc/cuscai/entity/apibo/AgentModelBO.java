@@ -11,12 +11,12 @@ import java.util.List;
  */
 public class AgentModelBO {
     int modelType;
-    List<Integer> modelIds;
+    List<String> modelIds;
 
     public AgentModelBO() {
     }
 
-    public AgentModelBO(int modelType, List<Integer> modelIds) {
+    public AgentModelBO(int modelType, List<String> modelIds) {
         this.modelType = modelType;
         this.modelIds = modelIds;
     }
@@ -29,11 +29,11 @@ public class AgentModelBO {
         this.modelType = modelType;
     }
 
-    public List<Integer> getModelIds() {
+    public List<String> getModelIds() {
         return modelIds;
     }
 
-    public void setModelIds(List<Integer> modelIds) {
+    public void setModelIds(List<String> modelIds) {
         this.modelIds = modelIds;
     }
 }

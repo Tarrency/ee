@@ -2,15 +2,15 @@ package com.cusc.cuscai.entity.model;
 
 import org.noodle.base.BaseModel;
 
-public class AgentMountWD extends BaseModel {
+public class AgentMountMR extends BaseModel {
     /** privaryKey **/
     private Integer id;
 
     /** agent id **/
     private Integer agentId;
 
-    /** 词表id **/
-    private String wdId;
+    /** 多轮对话模型的id **/
+    private String mrId;
 
     public Integer getId() {
         return id;
@@ -28,11 +28,11 @@ public class AgentMountWD extends BaseModel {
         this.agentId = agentId;
     }
 
-    public String getWdId() {
-        return wdId;
+    public String getMrId() {
+        return mrId;
     }
 
-    public void setWdId(String wdId) {
-        this.wdId = wdId;
+    public void setMrId(String mrId) {
+        this.mrId = mrId;
     }
 }

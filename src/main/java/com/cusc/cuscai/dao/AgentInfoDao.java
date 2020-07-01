@@ -1,11 +1,9 @@
 package com.cusc.cuscai.dao;
 
-import com.cusc.cuscai.entity.bo.AgentInfoBO;
+import com.cusc.cuscai.entity.apibo.AgentModelBO;
+import com.cusc.cuscai.entity.bo.*;
 import com.cusc.cuscai.entity.model.*;
-import com.cusc.cuscai.mapper.AgentInfoMapper;
-import com.cusc.cuscai.mapper.AgentMountKGMapper;
-import com.cusc.cuscai.mapper.AgentMountQAMapper;
-import com.cusc.cuscai.mapper.AgentMountWDMapper;
+import com.cusc.cuscai.mapper.*;
 import com.google.common.collect.Lists;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +25,22 @@ public class AgentInfoDao {
     @Autowired
     private AgentInfoMapper mapper;
     /**
-     * 挂载到agent的QA
+     * 挂载到agent的QA知识库
      */
     @Autowired
     private AgentMountQAMapper QAmapper;
     /**
-     * 挂载到agent的KG
+     * 挂载到agent的MR多轮对话
+     */
+    @Autowired
+    private AgentMountMRMapper MRmapper;
+    /**
+     * 挂载到agent的KG知识图谱
      */
     @Autowired
     private AgentMountKGMapper KGmapper;
     /**
-     * 挂载到agent的WD
+     * 挂载到agent的WD词表
      */
     @Autowired
     private AgentMountWDMapper WDmapper;
@@ -80,7 +83,7 @@ public class AgentInfoDao {
      * @param adminID 管理员id
      * @param agentName agent名字
      * @param QA_ids QA
-     * @param scene_ids 多轮对话
+     * @param mr_ids 多轮对话
      * @param kg_ids 知识图谱
      * @param voc_ids 词表
      * @return 数据库创建新的 agent 所自动生成的 agent id
@@ -89,10 +92,10 @@ public class AgentInfoDao {
     public Integer newAgent(
             java.lang.Integer adminID,
             String agentName,
-            List<java.lang.Integer> QA_ids,
-            List<java.lang.Integer> scene_ids,
-            List<java.lang.Integer> kg_ids,
-            List<java.lang.Integer> voc_ids
+            List<String> QA_ids,
+            List<String> kg_ids,
+            List<String> mr_ids,
+            List<String> voc_ids
     ) {
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
         return transactionTemplate.execute(txStatus -> {
@@ -109,8 +112,8 @@ public class AgentInfoDao {
             recreateRelationByAgentId(
                     agentId,
                     QA_ids,
-                    scene_ids,
                     kg_ids,
+                    mr_ids,
                     voc_ids
             );
             return agentId;
@@ -122,8 +125,8 @@ public class AgentInfoDao {
      * @param adminID 管理员id
      * @param agentName agent名字
      * @param QA_ids QA
-     * @param scene_ids 多轮对话
      * @param kg_ids 知识图谱
+     * @param mr_ids 多轮对话
      * @param voc_ids 词表
      */
     @Transactional
@@ -131,10 +134,10 @@ public class AgentInfoDao {
             java.lang.Integer adminID,
             java.lang.Integer agentID,
             String agentName,
-            List<java.lang.Integer> QA_ids,
-            List<java.lang.Integer> scene_ids,
-            List<java.lang.Integer> kg_ids,
-            List<java.lang.Integer> voc_ids
+            List<String> QA_ids,
+            List<String> kg_ids,
+            List<String> mr_ids,
+            List<String> voc_ids
     ) {
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
         transactionTemplate.execute(txStatus -> {
@@ -150,7 +153,7 @@ public class AgentInfoDao {
             recreateRelationByAgentId(
                     agentId,
                     QA_ids,
-                    scene_ids,
+                    mr_ids,
                     kg_ids,
                     voc_ids
             );
@@ -162,40 +165,49 @@ public class AgentInfoDao {
      * 重建关于agent的关系表
      * @param agentId 主键
      * @param QA_ids QA
-     * @param scene_ids 多轮对话
      * @param kg_ids 知识图谱
+     * @param mr_ids 多轮对话
      * @param voc_ids 词表
      */
     private void recreateRelationByAgentId(int agentId,
-            List<java.lang.Integer> QA_ids,
-            List<java.lang.Integer> scene_ids,
-            List<java.lang.Integer> kg_ids,
-            List<java.lang.Integer> voc_ids) {
+            List<String> QA_ids,
+            List<String> kg_ids,
+            List<String> mr_ids,
+            List<String> voc_ids) {
         //删除已有的 TODO 这里没有多轮对话的表，所以跳过了，以后记得加上
-        AgentMountQAExample example = new AgentMountQAExample();
-        example.createCriteria().andAgentIdEqualTo(agentId);
-        QAmapper.deleteByExample(example);
-        AgentMountKGExample example1 = new AgentMountKGExample();
-        example.createCriteria().andAgentIdEqualTo(agentId);
-        KGmapper.deleteByExample(example1);
-        AgentMountWDExample example2 = new AgentMountWDExample();
-        example.createCriteria().andAgentIdEqualTo(agentId);
-        WDmapper.deleteByExample(example2);
+        AgentMountQAExample qaExample = new AgentMountQAExample();
+        qaExample.createCriteria().andAgentIdEqualTo(agentId);
+        QAmapper.deleteByExample(qaExample);
+        AgentMountKGExample kgExample = new AgentMountKGExample();
+        kgExample.createCriteria().andAgentIdEqualTo(agentId);
+        KGmapper.deleteByExample(kgExample);
+        AgentMountMRExample mrExample = new AgentMountMRExample();
+        mrExample.createCriteria().andAgentIdEqualTo(agentId);
+        MRmapper.deleteByExample(mrExample);
+        AgentMountWDExample wdExample = new AgentMountWDExample();
+        wdExample.createCriteria().andAgentIdEqualTo(agentId);
+        WDmapper.deleteByExample(wdExample);
 
         //插入新的 TODO 这里没有多轮对话的表，所以跳过了，以后记得加上
-        for (Integer id : QA_ids) {
+        for (String id : QA_ids) {
             AgentMountQA agentMountQA = new AgentMountQA();
             agentMountQA.setAgentId(agentId);
             agentMountQA.setQaId(id);
             QAmapper.insert(agentMountQA);
         }
-        for (Integer id : kg_ids) {
+        for (String id : kg_ids) {
             AgentMountKG agentMountKG = new AgentMountKG();
             agentMountKG.setAgentId(agentId);
             agentMountKG.setKgId(id);
             KGmapper.insert(agentMountKG);
         }
-        for (Integer id : voc_ids) {
+        for (String id : mr_ids) {
+            AgentMountMR agentMountMR = new AgentMountMR();
+            agentMountMR.setAgentId(agentId);
+            agentMountMR.setMrId(id);
+            MRmapper.insert(agentMountMR);
+        }
+        for (String id : voc_ids) {
             AgentMountWD agentMountWD = new AgentMountWD();
             agentMountWD.setAgentId(agentId);
             agentMountWD.setWdId(id);
@@ -203,12 +215,63 @@ public class AgentInfoDao {
         }
     }
 
+    /**
+     * 搜索挂载到agent的所有模型（根据agent的类型）模型只有一种modelType
+     * @param agentID agent id
+     * @return {modelType:Int, modelIds:List<String>}
+     */
+    public AgentModelBO searchAgentModels(int agentID) {
+        AgentInfo agentInfo = findOne(agentID);
+        if (agentInfo == null) return null;
+        int modelType = agentInfo.getModelType();
+        List<String> modelIds = new ArrayList<>();
+        switch (modelType) {
+            case 0:
+                //QA知识库
+                AgentMountQAExample qaExample = new AgentMountQAExample();
+                qaExample.createCriteria().andAgentIdEqualTo(agentID);
+                List<AgentMountQABO> qaboList = QAmapper.selectByExample(qaExample);
+                for (AgentMountQABO qabo:qaboList) {
+                    modelIds.add(qabo.getQaId());
+                }
+                break;
+            case 1:
+                //知识图谱
+                AgentMountKGExample kgExample = new AgentMountKGExample();
+                kgExample.createCriteria().andAgentIdEqualTo(agentID);
+                List<AgentMountKGBO> kgboList = KGmapper.selectByExample(kgExample);
+                for (AgentMountKGBO kgbo:kgboList) {
+                    modelIds.add(kgbo.getKgId());
+                }
+                break;
+            case 2:
+                //多轮对话
+                AgentMountMRExample mrExample = new AgentMountMRExample();
+                mrExample.createCriteria().andAgentIdEqualTo(agentID);
+                List<AgentMountMRBO> mrboList = MRmapper.selectByExample(mrExample);
+                for (AgentMountMRBO mrbo:mrboList) {
+                    modelIds.add(mrbo.getMrId());
+                }
+                break;
+            case 3:
+                //词表
+                AgentMountWDExample wdExample = new AgentMountWDExample();
+                wdExample.createCriteria().andAgentIdEqualTo(agentID);
+                List<AgentMountWDBO> wdboList = WDmapper.selectByExample(wdExample);
+                for (AgentMountWDBO wdbo:wdboList) {
+                    modelIds.add(wdbo.getWdId());
+                }
+                break;
+        }
+        return new AgentModelBO(modelType, modelIds);
+    }
 
     public int delete(Integer adminID, Integer agentID) {
         AgentInfoExample example = new AgentInfoExample();
         example.createCriteria().andAdminIdEqualTo(adminID).andAgentIdEqualTo(agentID);
         return mapper.deleteByExample(example);
     }
+
     //////////////////////////////////////////////////////
     ///** generate code begin 此标记中间不要添加自定义代码 **///
     //////////////////////////////////////////////////////
@@ -250,11 +313,11 @@ public class AgentInfoDao {
         mapper.updateByPrimaryKeySelective(record);
     }
 
-    public AgentInfoBO findOne(java.lang.Integer id) {
+    public AgentInfoBO findOne(Integer id) {
         return mapper.selectByPrimaryKey(id);
     }
 
-    public boolean exists(java.lang.Integer id) {
+    public boolean exists(Integer id) {
         if (id == null) {
             return false;
         }
@@ -263,11 +326,11 @@ public class AgentInfoDao {
         return mapper.countByExample(example) > 0;
     }
 
-    public void delete(java.lang.Integer id) {
+    public void delete(Integer id) {
         mapper.deleteByPrimaryKey(id);
     }
 
-    public void remove(java.lang.Integer id) {
+    public void remove(Integer id) {
         mapper.deleteByPrimaryKey(id);
     }
 
@@ -276,14 +339,14 @@ public class AgentInfoDao {
     }
 
     public void delete(Iterable<AgentInfo> entities) {
-        List<java.lang.Integer> ids = Lists.newArrayList();
+        List<Integer> ids = Lists.newArrayList();
         for (AgentInfo entity : entities) {
             ids.add(entity.getAgentId());
         }
         deleteByIds(ids);
     }
 
-    public void deleteByIds(Iterable<java.lang.Integer> ids) {
+    public void deleteByIds(Iterable<Integer> ids) {
         AgentInfoExample example = new AgentInfoExample();
         example.createCriteria().andAgentIdIn(Lists.newArrayList(ids));
         mapper.deleteByExample(example);
