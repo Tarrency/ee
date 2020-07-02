@@ -256,52 +256,62 @@ public class AgentMountQAExample extends AbstractExample<AgentMountQABO> {
             return (Criteria) this;
         }
 
-        public Criteria andQaIdEqualTo(Integer value) {
+        public Criteria andQaIdEqualTo(String value) {
             addCriterion("qa_id =", value, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdNotEqualTo(Integer value) {
+        public Criteria andQaIdNotEqualTo(String value) {
             addCriterion("qa_id <>", value, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdGreaterThan(Integer value) {
+        public Criteria andQaIdGreaterThan(String value) {
             addCriterion("qa_id >", value, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andQaIdGreaterThanOrEqualTo(String value) {
             addCriterion("qa_id >=", value, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdLessThan(Integer value) {
+        public Criteria andQaIdLessThan(String value) {
             addCriterion("qa_id <", value, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdLessThanOrEqualTo(Integer value) {
+        public Criteria andQaIdLessThanOrEqualTo(String value) {
             addCriterion("qa_id <=", value, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdIn(List<Integer> values) {
+        public Criteria andQaIdLike(String value) {
+            addCriterion("qa_id like", value, "qaId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQaIdNotLike(String value) {
+            addCriterion("qa_id not like", value, "qaId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQaIdIn(List<String> values) {
             addCriterion("qa_id in", values, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdNotIn(List<Integer> values) {
+        public Criteria andQaIdNotIn(List<String> values) {
             addCriterion("qa_id not in", values, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdBetween(Integer value1, Integer value2) {
+        public Criteria andQaIdBetween(String value1, String value2) {
             addCriterion("qa_id between", value1, value2, "qaId");
             return (Criteria) this;
         }
 
-        public Criteria andQaIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andQaIdNotBetween(String value1, String value2) {
             addCriterion("qa_id not between", value1, value2, "qaId");
             return (Criteria) this;
         }

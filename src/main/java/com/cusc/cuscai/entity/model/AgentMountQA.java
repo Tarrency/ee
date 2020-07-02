@@ -10,7 +10,7 @@ public class AgentMountQA extends BaseModel {
     private Integer agentId;
 
     /** qa知识库表id **/
-    private Integer qaId;
+    private String qaId;
 
     public Integer getId() {
         return id;
@@ -28,11 +28,11 @@ public class AgentMountQA extends BaseModel {
         this.agentId = agentId;
     }
 
-    public Integer getQaId() {
+    public String getQaId() {
         return qaId;
     }
 
-    public void setQaId(Integer qaId) {
+    public void setQaId(String qaId) {
         this.qaId = qaId;
     }
 }

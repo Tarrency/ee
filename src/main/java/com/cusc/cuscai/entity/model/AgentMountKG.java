@@ -10,7 +10,7 @@ public class AgentMountKG extends BaseModel {
     private Integer agentId;
 
     /** 知识图谱数据表id **/
-    private Integer kgId;
+    private String kgId;
 
     public Integer getId() {
         return id;
@@ -28,11 +28,11 @@ public class AgentMountKG extends BaseModel {
         this.agentId = agentId;
     }
 
-    public Integer getKgId() {
+    public String getKgId() {
         return kgId;
     }
 
-    public void setKgId(Integer kgId) {
+    public void setKgId(String kgId) {
         this.kgId = kgId;
     }
 }

@@ -23,6 +23,9 @@ public class AgentInfo extends BaseModel {
     /** 更新时间 **/
     private Date agentUpdateTime;
 
+    /** 模型类型，一个agent只能挂载一种模型 **/
+    private Integer modelType;
+
     public Integer getAgentId() {
         return agentId;
     }
@@ -69,5 +72,13 @@ public class AgentInfo extends BaseModel {
 
     public void setAgentUpdateTime(Date agentUpdateTime) {
         this.agentUpdateTime = agentUpdateTime;
+    }
+
+    public Integer getModelType() {
+        return modelType;
+    }
+
+    public void setModelType(Integer modelType) {
+        this.modelType = modelType;
     }
 }

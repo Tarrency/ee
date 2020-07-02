@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dao.AgentInfoDao;
 import com.cusc.cuscai.entity.apibo.AgentBO;
+import com.cusc.cuscai.entity.apibo.AgentModelBO;
 import com.cusc.cuscai.entity.bo.AgentInfoBO;
 import com.cusc.cuscai.exception.GlobalException;
 
@@ -77,22 +78,22 @@ public class AgentService {
         try {
             JSONObject obj = JSON.parseObject(agentDatabase);
             String agentName = obj.getString("agentName");
-            List<Integer> QA_ids = splitAsInteger(obj.getString("QA"));
-            List<Integer> scene_ids = splitAsInteger(obj.getString("scene"));
-            List<Integer> kg_ids = splitAsInteger(obj.getString("kg"));
-            List<Integer> voc_ids = splitAsInteger(obj.getString("voc"));
-            return agentInfoDao.newAgent(adminID, agentName, QA_ids, scene_ids, kg_ids, voc_ids);
+            List<String> QA_ids = splitIds(obj.getString("qa"));
+            List<String> kg_ids = splitIds(obj.getString("kg"));
+            List<String> mr_ids = splitIds(obj.getString("mr"));
+            List<String> voc_ids = splitIds(obj.getString("voc"));
+            return agentInfoDao.newAgent(adminID, agentName, QA_ids, kg_ids, mr_ids, voc_ids);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    List<Integer> splitAsInteger(String text) {
-        List<Integer> ids = new ArrayList<>();
+    List<String> splitIds(String text) {
+        List<String> ids = new ArrayList<>();
         for (String s : text.split(",")) {
             if (!s.isEmpty()) {
-                ids.add(Integer.valueOf(s));
+                ids.add(s);
             }
         }
         return ids;
@@ -105,14 +106,30 @@ public class AgentService {
         try {
             JSONObject obj = JSON.parseObject(agentDatabase);
             String agentName = obj.getString("agentName");
-            List<Integer> QA_ids = splitAsInteger(obj.getString("QA"));
-            List<Integer> scene_ids = splitAsInteger(obj.getString("scene"));
-            List<Integer> kg_ids = splitAsInteger(obj.getString("kg"));
-            List<Integer> voc_ids = splitAsInteger(obj.getString("voc"));
-            agentInfoDao.changeAgent(adminID, agentID, agentName, QA_ids, scene_ids, kg_ids, voc_ids);
+            List<String> QA_ids = splitIds(obj.getString("qa"));
+            List<String> kg_ids = splitIds(obj.getString("kg"));
+            List<String> mr_ids = splitIds(obj.getString("mr"));
+            List<String> voc_ids = splitIds(obj.getString("voc"));
+            agentInfoDao.changeAgent(adminID, agentID, agentName, QA_ids, kg_ids, mr_ids, voc_ids);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    /**
+     * 查找所有model，并返回modelType
+     * @param agentID 必选， agent 的 id
+     * @return AgentModelBO
+     */
+    public AgentModelBO searchAgentModels(int agentID) {
+        AgentModelBO resdata;
+        try {
+            resdata = agentInfoDao.searchAgentModels(agentID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return resdata;
     }
 }

@@ -1,11 +1,9 @@
 package com.cusc.cuscai.entity.model;
 
 import com.cusc.cuscai.entity.bo.AgentMountKGBO;
-
-import org.noodle.base.AbstractExample;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.noodle.base.AbstractExample;
 
 public class AgentMountKGExample extends AbstractExample<AgentMountKGBO> {
     protected String orderByClause;
@@ -256,52 +254,62 @@ public class AgentMountKGExample extends AbstractExample<AgentMountKGBO> {
             return (Criteria) this;
         }
 
-        public Criteria andKgIdEqualTo(Integer value) {
+        public Criteria andKgIdEqualTo(String value) {
             addCriterion("kg_id =", value, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdNotEqualTo(Integer value) {
+        public Criteria andKgIdNotEqualTo(String value) {
             addCriterion("kg_id <>", value, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdGreaterThan(Integer value) {
+        public Criteria andKgIdGreaterThan(String value) {
             addCriterion("kg_id >", value, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andKgIdGreaterThanOrEqualTo(String value) {
             addCriterion("kg_id >=", value, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdLessThan(Integer value) {
+        public Criteria andKgIdLessThan(String value) {
             addCriterion("kg_id <", value, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdLessThanOrEqualTo(Integer value) {
+        public Criteria andKgIdLessThanOrEqualTo(String value) {
             addCriterion("kg_id <=", value, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdIn(List<Integer> values) {
+        public Criteria andKgIdLike(String value) {
+            addCriterion("kg_id like", value, "kgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andKgIdNotLike(String value) {
+            addCriterion("kg_id not like", value, "kgId");
+            return (Criteria) this;
+        }
+
+        public Criteria andKgIdIn(List<String> values) {
             addCriterion("kg_id in", values, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdNotIn(List<Integer> values) {
+        public Criteria andKgIdNotIn(List<String> values) {
             addCriterion("kg_id not in", values, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdBetween(Integer value1, Integer value2) {
+        public Criteria andKgIdBetween(String value1, String value2) {
             addCriterion("kg_id between", value1, value2, "kgId");
             return (Criteria) this;
         }
 
-        public Criteria andKgIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andKgIdNotBetween(String value1, String value2) {
             addCriterion("kg_id not between", value1, value2, "kgId");
             return (Criteria) this;
         }

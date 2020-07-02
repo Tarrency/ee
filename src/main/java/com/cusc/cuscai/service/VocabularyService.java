@@ -57,11 +57,11 @@ public class VocabularyService {
     }
 
     //新增词表
-    public void newVocabulary(String name, int type) {
+    public VocabularyInfo newVocabulary(String name, int type) {
             VocabularyInfo vcb = new VocabularyInfo();
             vcb.setName(name);
             vcb.setType(type);
-            vocabularydao.save(vcb);
+            return vocabularydao.save(vcb);
     }
 
     //删除词表
