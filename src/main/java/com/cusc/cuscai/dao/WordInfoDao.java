@@ -17,7 +17,7 @@ import com.google.common.collect.Lists;
 public class WordInfoDao {
 
 	@Autowired
-	WordInfoMapper mapper ;
+	WordInfoMapper mapper;
 
    //////////////////////////////////////////////////////
    ///** generate code begin 此标记中间不要添加自定义代码 **///
@@ -121,4 +121,9 @@ public class WordInfoDao {
 		return mapper.insertBatch(list);
 	}
 
+	public List<WordInfoBO> findByVocabularyIDs(List<Integer> vcbids){
+		WordInfoExample example=new WordInfoExample();
+		example.createCriteria().andVocabularyIdIn(vcbids);
+		return mapper.selectByExample(example);
+	}
 }

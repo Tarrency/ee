@@ -30,6 +30,8 @@ mybatis:
 remote-ai:
   qaai:
     url: http://10.108.211.93:7662
+  kgai:
+    url: http://10.108.217.31:5000
 
 neo4j:
   url: bolt://localhost:7687

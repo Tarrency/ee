@@ -131,6 +131,7 @@ public class VocabularyController {
                 if(!word.isEmpty()){
                     words.add(word);
                 }
+
             }
 
             int insertcount;

@@ -9,7 +9,6 @@ import com.cusc.cuscai.entity.bo.VocabularyInfoBO;
 import com.cusc.cuscai.entity.bo.WordInfoBO;
 import com.cusc.cuscai.entity.model.VocabularyInfo;
 import com.cusc.cuscai.entity.model.WordInfo;
-import com.cusc.cuscai.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,10 +57,10 @@ public class VocabularyService {
 
     //新增词表
     public VocabularyInfo newVocabulary(String name, int type) {
-            VocabularyInfo vcb = new VocabularyInfo();
-            vcb.setName(name);
-            vcb.setType(type);
-            return vocabularydao.save(vcb);
+        VocabularyInfo vcb = new VocabularyInfo();
+        vcb.setName(name);
+        vcb.setType(type);
+        return vocabularydao.save(vcb);
     }
 
     //删除词表
