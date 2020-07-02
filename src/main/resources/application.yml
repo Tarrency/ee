@@ -6,7 +6,7 @@ spring:
   data:
     neo4j:
       # 数据库uri地址
-      uri: bolt://39.102.46.180:7687  # bolt://localhost:7687
+      uri: bolt://39.102.46.180:7687  #测试用本地 # bolt://localhost:7687 服务器 bolt://39.102.46.180:7687
       # Neo4j配置
       username: neo4j
       password: 123456
@@ -30,3 +30,7 @@ remote-ai:
   qaai:
     url: http://10.108.211.93:7662
 
+neo4j:
+  url: bolt://localhost:7687
+  username: neo4j
+  password: 123456

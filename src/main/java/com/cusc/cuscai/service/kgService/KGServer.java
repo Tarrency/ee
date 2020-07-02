@@ -1,16 +1,19 @@
 package com.cusc.cuscai.service.kgService;
 
+import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.kgEntity.Chairman;
 import com.cusc.cuscai.entity.kgEntity.Organization;
 import com.cusc.cuscai.entity.kgEntity.Person;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface KGServer {
     Person addNode(Person person);
     Organization addNode(Organization organization);
     Person findPersonById(long id);
+    Person findPersonByName(String name);
     Organization findOrgById(long id);
     List findNeiborByName(String name);
     Person modifyPerson(long id, String name, String desc, String sex);
@@ -22,4 +25,12 @@ public interface KGServer {
 
     List<Person> getPersonFromFile(MultipartFile file);
     List<Chairman> getChairmanFromFile(MultipartFile file);
+
+    List<String> getEntLabels();
+    List<Map<String, Long>> countEntities();
+
+    Long countRelations();
+    List<String> getRelLabels();
+
+    GraphDTO getNeibors(String name);
 }

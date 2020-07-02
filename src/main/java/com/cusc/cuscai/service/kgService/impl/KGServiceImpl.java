@@ -1,15 +1,16 @@
 package com.cusc.cuscai.service.kgService.impl;
 
-import com.cusc.cuscai.dao.kgdao.ChairmanRepository;
-import com.cusc.cuscai.dao.kgdao.OrganizationRepository;
-import com.cusc.cuscai.dao.kgdao.PersonRepository;
-import com.cusc.cuscai.dao.kgdao.PresidentRepository;
+import com.cusc.cuscai.dao.kgdao.*;
+import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.kgEntity.*;
 import com.cusc.cuscai.exception.GlobalException;
 import com.cusc.cuscai.service.kgService.KGServer;
 import com.cusc.cuscai.util.JsonSimple;
 import com.cusc.cuscai.util.POIUtil;
 import com.cusc.cuscai.util.UUIDUtil;
+import org.neo4j.driver.internal.InternalPath;
+import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -17,9 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class KGServiceImpl implements KGServer {
@@ -31,6 +31,9 @@ public class KGServiceImpl implements KGServer {
     ChairmanRepository chairmanRepository;
     @Autowired
     PresidentRepository presidentRepository;
+
+    @Autowired
+    Neo4jDao neo4jDao;
 
     /**
     注意 添加和修改节点都需要区分是那种节点。因为有不同的属性。上传同样如此，上传需要区分节点类型。
@@ -49,6 +52,13 @@ public class KGServiceImpl implements KGServer {
     @Override
     public Person findPersonById(long id){
         Person p = personRepository.findById(id).get();
+        System.out.println(JsonSimple.toJson(p));
+        return p;
+    }
+
+    @Override
+    public Person findPersonByName(String name){
+        Person p = personRepository.findByName(name);
         System.out.println(JsonSimple.toJson(p));
         return p;
     }
@@ -176,5 +186,123 @@ public class KGServiceImpl implements KGServer {
             res.add(relation);
         }
         return res;
+    }
+
+    @Override
+    public List<String> getEntLabels(){
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "MATCH (n) RETURN distinct labels(n)";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        List<String> ans = new ArrayList<>();
+        while(iterator.hasNext()) {
+            Map<String, Object> each = iterator.next();
+            for(String s: each.keySet()) {
+                String[] res = (String[]) each.get(s);
+//                System.out.println(res[0]);
+                ans.add(res[0]);
+            }
+        }
+        return ans;
+    }
+
+    @Override
+    public List<Map<String, Long>> countEntities() {
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "MATCH (n) RETURN distinct labels(n), count(*)";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        List<Map<String, Long>> ans = new ArrayList<>();
+        while(iterator.hasNext()) {
+            Map<String, Object> each = iterator.next();
+            Map<String, Long> map = new HashMap<String, Long>();
+            String[] label = (String[]) each.get("labels(n)");
+            Long count = (Long) each.get("count(*)");
+            map.put(label[0], count);
+            ans.add(map);
+        }
+        return ans;
+    }
+
+    @Override
+    public Long countRelations() {
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "MATCH ()-[r]->() return count(r)";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        Map<String, Object> each = iterator.next();
+        Long count = (Long) each.get("count(r)");
+        return count;
+    }
+
+    @Override
+    public List<String> getRelLabels(){
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "match ()-[r]->() return distinct type(r)";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        List<String> ans = new ArrayList<>();
+        while(iterator.hasNext()) {
+            Map<String, Object> each = iterator.next();
+            for(String s: each.keySet()) {
+                String res = (String) each.get(s);
+//                System.out.println(res[0]);
+                ans.add(res);
+            }
+        }
+        return ans;
+    }
+
+    @Override
+    public GraphDTO getNeibors(String name) {
+        Neo4jSession session = neo4jDao.open();
+        String cypher = " match data=(na{name:'" + name + "'})-[r]->(nb) return data";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        GraphDTO gto = mapToGraph(iterator);
+        System.out.println(gto.getNodes());
+        System.out.println(gto.getLinks());
+        return gto;
+    }
+
+    private GraphDTO mapToGraph(
+            Iterator<Map<String, Object>> neo4jDataIterator) {
+        Map<Long, Object> nodeMap = new HashMap<>();
+        Map<Long, Object> linkMap = new HashMap<>();
+
+        while (neo4jDataIterator.hasNext()) {
+            Map<String, Object> each = neo4jDataIterator.next();
+            if (!each.containsKey("data")) {
+                continue;
+            }
+
+            InternalPath.SelfContainedSegment[] internalPaths = (InternalPath.SelfContainedSegment[]) each.get("data");
+            InternalPath.SelfContainedSegment internalPath = internalPaths[0];
+
+            //归纳出所有节点。(InternalNode)?
+            Node start =  internalPath.start();
+            Node end = internalPath.end();
+            nodeMap.put(start.id(), start.asMap().get("name"));
+            nodeMap.put(end.id(), end.asMap().get("name"));
+
+//            for (Node node : internalPath.nodes()) {
+//                InternalNode internalNode = (InternalNode) node;
+//                if (nodeMap.containsKey(internalNode.id())) {
+//                    continue;
+//                }
+//                nodeMap.put(internalNode.id(), internalNode);
+//            }
+
+            //归纳出所有关系。 (InternalRelationship)?
+            Relationship relation = internalPath.relationship();
+            linkMap.put(relation.id(), relation.type());
+//            for (Relationship relation : internalPath.relationships()) {
+//                InternalRelationship internalRelation = (InternalRelationship) relation;
+//                if (linkMap.containsKey(internalRelation.id())) {
+//                    continue;
+//                }
+//                linkMap.put(internalRelation.id(), internalRelation);
+//            }
+        }
+
+        GraphDTO dto = new GraphDTO();
+        dto.setNodes(nodeMap.values().stream().collect(Collectors.toList()));
+        dto.setLinks(linkMap.values().stream().collect(Collectors.toList()));
+        return dto;
     }
 }

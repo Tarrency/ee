@@ -1,6 +1,7 @@
 package com.cusc.cuscai.controller;
 
 
+import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.kgEntity.Chairman;
 import com.cusc.cuscai.entity.kgEntity.Person;
 import com.cusc.cuscai.service.kgService.KGServer;
@@ -9,6 +10,7 @@ import com.cusc.cuscai.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.neo4j.driver.types.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +27,30 @@ public class KGController {
     @GetMapping("hello")
     public String hello(){
         return "hello";
+    }
+
+    @ApiOperation("获取实体标签")
+    @GetMapping("getEntLabels")
+    public Result getEntLabels(){
+        return Result.success("查询实体标签", kgServer.getEntLabels());
+    }
+
+    @ApiOperation("获取关系标签")
+    @GetMapping("getRelLabels")
+    public Result getRelLabels(){
+        return Result.success("查询关系标签", kgServer.getRelLabels());
+    }
+
+    @ApiOperation("统计各类实体数量")
+    @GetMapping("countEntities")
+    public Result countEntities() {
+        return Result.success("统计各类实体数量", kgServer.countEntities());
+    }
+
+    @ApiOperation("统计关系数量")
+    @GetMapping("countRelations")
+    public Result countRelations() {
+        return Result.success("统计关系数量", kgServer.countRelations());
     }
 
     // 正确的前后端逻辑应该是 前端选择一个实体类型，后端返回给实体属性，然后前端再输入属性具体值发给后端进行添加
@@ -48,16 +74,19 @@ public class KGController {
 
     @ApiOperation("查找人物节点")
     @GetMapping("/findPersonById")
-    public Person findNodeById(@RequestParam("id")
-                                     @ApiParam(value = "id", required = true) String id){
-        return kgServer.findPersonById(Long.parseLong(id));
+    public Result findNodeById(@RequestParam("name") @ApiParam(value = "name", required = true) String name
+                                ){
+        return Result.success("查找人物节点", kgServer.findPersonByName(name));
     }
 
     @ApiOperation("查找邻居节点")
     @GetMapping("/findNerborByName")
     public Result findNodeByName(@RequestParam("name")
                                  @ApiParam(value = "name", required = true) String name){
-        List neibor = kgServer.findNeiborByName(name);
+//        List neibor = kgServer.findNeiborByName(name);
+        GraphDTO neibor = kgServer.getNeibors(name);
+        // System.out.println( ((Node) (neibor.getNodes().get(0))).get("properties").get("name"));
+        // nodes.get(0).get("properties").get("name");
         System.out.println(JsonSimple.toJson(neibor));
         return Result.success("查询邻居节点", neibor);
     }
