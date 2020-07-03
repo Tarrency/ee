@@ -41,7 +41,6 @@ public class AIIEController {
     @ApiOperation("获取目前现有的模型")
     @PostMapping("/getModels")
     public Result getModels(@RequestParam("agentId") @ApiParam(value = "agentId", required = true) Integer agentId) {
-        System.out.println("agent id == "+ agentId);
         if (!agentService.isAgentExist(agentId)) {
             return Result.fail(41100, String.format("Agent : %d 不存在", agentId));
         }
