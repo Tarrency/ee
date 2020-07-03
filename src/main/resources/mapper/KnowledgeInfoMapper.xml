@@ -10,7 +10,7 @@
         <result column="update_time" property="KnowledgeUpdateTime" jdbcType="TIMESTAMP" />
 
     </resultMap>
-    
+
     <sql id="Example_Where_Clause">
         <where>
             <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -158,4 +158,10 @@
         </if>
     </delete>
 
+    <delete id="deleteByKBExample" parameterType="com.cusc.cuscai.entity.model.KnowledgeBaseExample">
+        delete from qa_knowledge_base
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </delete>
 </mapper>
