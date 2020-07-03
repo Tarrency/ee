@@ -6,9 +6,11 @@ import com.cusc.cuscai.entity.model.KnowledgeBaseExample;
 import com.cusc.cuscai.entity.model.KnowledgeBase;
 import com.cusc.cuscai.entity.model.KnowledgeInfoExample;
 import com.cusc.cuscai.entity.model.KnowledgeInfo;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface KnowledgeInfoMapper {
     int countByExample(KnowledgeInfoExample example);
 

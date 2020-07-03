@@ -8,10 +8,12 @@ import com.cusc.cuscai.entity.model.KnowledgeBaseExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.cusc.cuscai.mapper.KnowledgeInfoMapper;
 import com.google.common.collect.Lists;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class QAKnowledgeDao {
 
     @Autowired

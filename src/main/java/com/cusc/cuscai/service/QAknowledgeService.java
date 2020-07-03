@@ -5,10 +5,12 @@ import com.cusc.cuscai.entity.bo.KnowledgeInfoBO;
 import com.cusc.cuscai.entity.model.KnowledgeBase;
 import com.cusc.cuscai.entity.model.KnowledgeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class QAknowledgeService {
 
     @Autowired
