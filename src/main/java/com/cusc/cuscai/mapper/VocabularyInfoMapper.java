@@ -9,7 +9,6 @@ import com.cusc.cuscai.entity.model.VocabularyInfoExample;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
 public interface VocabularyInfoMapper {
     int countByExample(VocabularyInfoExample example);
 

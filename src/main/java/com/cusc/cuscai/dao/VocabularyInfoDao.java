@@ -19,6 +19,13 @@ public class VocabularyInfoDao {
 	@Autowired
 	private VocabularyInfoMapper mapper;
 
+	public List<VocabularyInfoBO> findByType(int type){
+		VocabularyInfoExample example=new VocabularyInfoExample();
+		example.createCriteria().andTypeEqualTo(type);
+		List<VocabularyInfoBO> res= mapper.selectByExample(example);
+		return res;
+	}
+
    //////////////////////////////////////////////////////
    ///** generate code begin 此标记中间不要添加自定义代码 **///
    //////////////////////////////////////////////////////
@@ -105,11 +112,6 @@ public class VocabularyInfoDao {
 	//////////////////////////////////////////////////////
    ///** generate code begin 此标记中间不要添加自定义代码 **///
    //////////////////////////////////////////////////////
-	public List<VocabularyInfoBO> findByType(int type){
-		VocabularyInfoExample example=new VocabularyInfoExample();
-		example.createCriteria().andTypeEqualTo(type);
-		List<VocabularyInfoBO> res= mapper.selectByExample(example);
-		return res;
-	}
+
 
 }

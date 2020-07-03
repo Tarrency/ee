@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cusc.cuscai.mapper.HistoryDialogueInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cusc.cuscai.entity.model.HistoryDialogueInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="session_id" property="sessionId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="agent_id" property="agentId" jdbcType="BIGINT" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="sender" property="sender" jdbcType="SMALLINT" />
+    <result column="date" property="date" jdbcType="TIMESTAMP" />
+    <result column="if_deliverd" property="ifDeliverd" jdbcType="BIT" />
+    <result column="other" property="other" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BOResultMap" type="com.cusc.cuscai.entity.bo.HistoryDialogueInfoBO" extends="BaseResultMap" />
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, session_id, user_id, agent_id, message, sender, date, if_deliverd, other
+  </sql>
+  <select id="selectByExample" parameterType="com.cusc.cuscai.entity.model.HistoryDialogueInfoExample" resultMap="BOResultMap" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from history_dialogue_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      limit ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BOResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from history_dialogue_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from history_dialogue_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cusc.cuscai.entity.model.HistoryDialogueInfoExample" >
+    delete from history_dialogue_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cusc.cuscai.entity.model.HistoryDialogueInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into history_dialogue_info (id, session_id, user_id, 
+      agent_id, message, sender, 
+      date, if_deliverd, other
+      )
+    values (#{id,jdbcType=BIGINT}, #{sessionId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{agentId,jdbcType=BIGINT}, #{message,jdbcType=VARCHAR}, #{sender,jdbcType=SMALLINT}, 
+      #{date,jdbcType=TIMESTAMP}, #{ifDeliverd,jdbcType=BIT}, #{other,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cusc.cuscai.entity.model.HistoryDialogueInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into history_dialogue_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sessionId != null" >
+        session_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="agentId != null" >
+        agent_id,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="sender != null" >
+        sender,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="ifDeliverd != null" >
+        if_deliverd,
+      </if>
+      <if test="other != null" >
+        other,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="sessionId != null" >
+        #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentId != null" >
+        #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null" >
+        #{sender,jdbcType=SMALLINT},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ifDeliverd != null" >
+        #{ifDeliverd,jdbcType=BIT},
+      </if>
+      <if test="other != null" >
+        #{other,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cusc.cuscai.entity.model.HistoryDialogueInfoExample" resultType="java.lang.Integer" >
+    select count(*) from history_dialogue_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update history_dialogue_info
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.sessionId != null" >
+        session_id = #{record.sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.agentId != null" >
+        agent_id = #{record.agentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.message != null" >
+        message = #{record.message,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sender != null" >
+        sender = #{record.sender,jdbcType=SMALLINT},
+      </if>
+      <if test="record.date != null" >
+        date = #{record.date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.ifDeliverd != null" >
+        if_deliverd = #{record.ifDeliverd,jdbcType=BIT},
+      </if>
+      <if test="record.other != null" >
+        other = #{record.other,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update history_dialogue_info
+    set id = #{record.id,jdbcType=BIGINT},
+      session_id = #{record.sessionId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      agent_id = #{record.agentId,jdbcType=BIGINT},
+      message = #{record.message,jdbcType=VARCHAR},
+      sender = #{record.sender,jdbcType=SMALLINT},
+      date = #{record.date,jdbcType=TIMESTAMP},
+      if_deliverd = #{record.ifDeliverd,jdbcType=BIT},
+      other = #{record.other,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cusc.cuscai.entity.model.HistoryDialogueInfo" >
+    update history_dialogue_info
+    <set >
+      <if test="sessionId != null" >
+        session_id = #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentId != null" >
+        agent_id = #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null" >
+        sender = #{sender,jdbcType=SMALLINT},
+      </if>
+      <if test="date != null" >
+        date = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ifDeliverd != null" >
+        if_deliverd = #{ifDeliverd,jdbcType=BIT},
+      </if>
+      <if test="other != null" >
+        other = #{other,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cusc.cuscai.entity.model.HistoryDialogueInfo" >
+    update history_dialogue_info
+    set session_id = #{sessionId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      agent_id = #{agentId,jdbcType=BIGINT},
+      message = #{message,jdbcType=VARCHAR},
+      sender = #{sender,jdbcType=SMALLINT},
+      date = #{date,jdbcType=TIMESTAMP},
+      if_deliverd = #{ifDeliverd,jdbcType=BIT},
+      other = #{other,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
