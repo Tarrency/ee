@@ -3,7 +3,6 @@ package com.cusc.cuscai.entity.apibo;
 import com.cusc.cuscai.entity.bo.AgentInfoBO;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author lxy
@@ -18,20 +17,16 @@ public class AgentBO {
     Date agentCreateTime;
     Date agentUpdateTime;
     int agentStatus;//开启/关闭
-    int modelType;
-    List<String> modelIds;
 
     public AgentBO() {
     }
 
-    public AgentBO(AgentInfoBO agentInfoBO, List<String> modelIds) {
+    public AgentBO(AgentInfoBO agentInfoBO) {
         this.agentId = agentInfoBO.getAgentId();
         this.agentName = agentInfoBO.getAgentName();
         this.agentCreateTime = agentInfoBO.getAgentCreateTime();
         this.agentUpdateTime = agentInfoBO.getAgentUpdateTime();
         this.agentStatus = agentInfoBO.getAgentStatus();
-        this.modelType = agentInfoBO.getModelType();
-        this.modelIds = modelIds;
     }
 
     public int getAgentId() {
@@ -74,19 +69,4 @@ public class AgentBO {
         this.agentStatus = agentStatus;
     }
 
-    public int getModelType() {
-        return modelType;
-    }
-
-    public void setModelType(int modelType) {
-        this.modelType = modelType;
-    }
-
-    public List<String> getModelIds() {
-        return modelIds;
-    }
-
-    public void setModelIds(List<String> modelIds) {
-        this.modelIds = modelIds;
-    }
 }

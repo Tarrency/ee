@@ -46,11 +46,6 @@ class AgentController {
         return Result.success(20600, "查询Agent成功", resdata);
     }
 
-    /**
-     *
-     * @param adminID 管理员id
-     * @param agentName agent名字，可空，如果为空，则全量查询
-     */
     @GetMapping("/getlist")
     @ResponseBody
     @ApiOperation("查询agent默认列表")
@@ -91,13 +86,11 @@ class AgentController {
     @ApiOperation("新增Agent")
     public Result newAgent(
             @RequestParam("adminID") @ApiParam(value = "管理员用户id", required = true) int adminID,
-            @RequestParam("agentName") @ApiParam(value = "要修改的Agent 名字", required = true) String agentName,
-            @RequestParam("modelType") @ApiParam(value = "模型类型", required = true) int modelType,
-            @RequestParam("modelIds") @ApiParam(value = "模型id", required = true) List<String> modelIds
+            @RequestParam("agentDatabase") @ApiParam(value = "要挂接的Agent数据库") String agentDatabase
     ) {
         Integer agentID = -1;
         try {
-            agentID = agentService.newAgent(adminID, agentName, modelType, modelIds);
+            agentID = agentService.newAgent(adminID, agentDatabase);
         } catch (Exception e) {
             return Result.fail(40602, e.getMessage());
         }
@@ -110,12 +103,10 @@ class AgentController {
     public Result changeAgent(
             @RequestParam("adminID") @ApiParam(value = "管理员用户id", required = true) int adminID,
             @RequestParam("agentID") @ApiParam(value = "要修改的Agent id", required = true) int agentID,
-            @RequestParam("agentName") @ApiParam(value = "要修改的Agent 名字", required = true) String agentName,
-            @RequestParam("modelType") @ApiParam(value = "模型类型", required = true) int modelType,
-            @RequestParam("modelIds") @ApiParam(value = "模型id", required = true) List<String> modelIds
+            @RequestParam("agentDatabase") @ApiParam(value = "挂载到 agent 的数据库", required = true) String agentDatabase
     ) {
         try {
-            agentService.changeAgent(adminID, agentID, agentName, modelType, modelIds);
+            agentService.changeAgent(adminID, agentID, agentDatabase);
         } catch (Exception e) {
             return Result.fail(40603, e.getMessage());
         }

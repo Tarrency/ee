@@ -82,16 +82,20 @@ public class AgentInfoDao {
      *
      * @param adminID 管理员id
      * @param agentName agent名字
-     * @param modelType 模型类型
-     * @param modelIds 模型id
+     * @param QA_ids QA
+     * @param mr_ids 多轮对话
+     * @param kg_ids 知识图谱
+     * @param voc_ids 词表
      * @return 数据库创建新的 agent 所自动生成的 agent id
      */
     @Transactional
     public Integer newAgent(
-            Integer adminID,
+            java.lang.Integer adminID,
             String agentName,
-            Integer modelType,
-            List<String> modelIds
+            List<String> QA_ids,
+            List<String> kg_ids,
+            List<String> mr_ids,
+            List<String> voc_ids
     ) {
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
         return transactionTemplate.execute(txStatus -> {
@@ -105,7 +109,13 @@ public class AgentInfoDao {
 
             //保存并重构关系
             int agentId = agentInfo.getAgentId();
-            recreateRelationByAgentId(agentId, modelType, modelIds);
+            recreateRelationByAgentId(
+                    agentId,
+                    QA_ids,
+                    kg_ids,
+                    mr_ids,
+                    voc_ids
+            );
             return agentId;
         });
     }
@@ -113,18 +123,21 @@ public class AgentInfoDao {
     /**
      *
      * @param adminID 管理员id
-     * @param agentID agent id
      * @param agentName agent名字
-     * @param modelType 模型类型
-     * @param modelIds 模型id
+     * @param QA_ids QA
+     * @param kg_ids 知识图谱
+     * @param mr_ids 多轮对话
+     * @param voc_ids 词表
      */
     @Transactional
     public void changeAgent(
-            Integer adminID,
-            Integer agentID,
+            java.lang.Integer adminID,
+            java.lang.Integer agentID,
             String agentName,
-            Integer modelType,
-            List<String> modelIds
+            List<String> QA_ids,
+            List<String> kg_ids,
+            List<String> mr_ids,
+            List<String> voc_ids
     ) {
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
         transactionTemplate.execute(txStatus -> {
@@ -137,7 +150,13 @@ public class AgentInfoDao {
 
             //保存并重构关系
             int agentId = agentInfo.getAgentId();
-            recreateRelationByAgentId(agentId, modelType, modelIds);
+            recreateRelationByAgentId(
+                    agentId,
+                    QA_ids,
+                    mr_ids,
+                    kg_ids,
+                    voc_ids
+            );
             return null;
         });
     }
@@ -145,15 +164,17 @@ public class AgentInfoDao {
     /**
      * 重建关于agent的关系表
      * @param agentId 主键
-     * @param modelType 模型类型
-     * @param modelIds 模型id
+     * @param QA_ids QA
+     * @param kg_ids 知识图谱
+     * @param mr_ids 多轮对话
+     * @param voc_ids 词表
      */
-    private void recreateRelationByAgentId(
-            int agentId,
-            Integer modelType,
-            List<String> modelIds
-    ) {
-        //已有的全部删除
+    private void recreateRelationByAgentId(int agentId,
+            List<String> QA_ids,
+            List<String> kg_ids,
+            List<String> mr_ids,
+            List<String> voc_ids) {
+        //删除已有的 TODO 这里没有多轮对话的表，所以跳过了，以后记得加上
         AgentMountQAExample qaExample = new AgentMountQAExample();
         qaExample.createCriteria().andAgentIdEqualTo(agentId);
         QAmapper.deleteByExample(qaExample);
@@ -167,44 +188,30 @@ public class AgentInfoDao {
         wdExample.createCriteria().andAgentIdEqualTo(agentId);
         WDmapper.deleteByExample(wdExample);
 
-        //只插入指定的model
-        switch (modelType) {
-            case 0:
-                //QA知识库
-                for (String id : modelIds) {
-                    AgentMountQA agentMountQA = new AgentMountQA();
-                    agentMountQA.setAgentId(agentId);
-                    agentMountQA.setQaId(id);
-                    QAmapper.insert(agentMountQA);
-                }
-                break;
-            case 1:
-                //知识图谱
-                for (String id : modelIds) {
-                    AgentMountKG agentMountKG = new AgentMountKG();
-                    agentMountKG.setAgentId(agentId);
-                    agentMountKG.setKgId(id);
-                    KGmapper.insert(agentMountKG);
-                }
-                break;
-            case 2:
-                //多轮对话
-                for (String id : modelIds) {
-                    AgentMountMR agentMountMR = new AgentMountMR();
-                    agentMountMR.setAgentId(agentId);
-                    agentMountMR.setMrId(id);
-                    MRmapper.insert(agentMountMR);
-                }
-                break;
-            case 3:
-                //词表
-                for (String id : modelIds) {
-                    AgentMountWD agentMountWD = new AgentMountWD();
-                    agentMountWD.setAgentId(agentId);
-                    agentMountWD.setWdId(id);
-                    WDmapper.insert(agentMountWD);
-                }
-                break;
+        //插入新的 TODO 这里没有多轮对话的表，所以跳过了，以后记得加上
+        for (String id : QA_ids) {
+            AgentMountQA agentMountQA = new AgentMountQA();
+            agentMountQA.setAgentId(agentId);
+            agentMountQA.setQaId(id);
+            QAmapper.insert(agentMountQA);
+        }
+        for (String id : kg_ids) {
+            AgentMountKG agentMountKG = new AgentMountKG();
+            agentMountKG.setAgentId(agentId);
+            agentMountKG.setKgId(id);
+            KGmapper.insert(agentMountKG);
+        }
+        for (String id : mr_ids) {
+            AgentMountMR agentMountMR = new AgentMountMR();
+            agentMountMR.setAgentId(agentId);
+            agentMountMR.setMrId(id);
+            MRmapper.insert(agentMountMR);
+        }
+        for (String id : voc_ids) {
+            AgentMountWD agentMountWD = new AgentMountWD();
+            agentMountWD.setAgentId(agentId);
+            agentMountWD.setWdId(id);
+            WDmapper.insert(agentMountWD);
         }
     }
 
@@ -215,7 +222,7 @@ public class AgentInfoDao {
      */
     public AgentModelBO searchAgentModels(int agentID) {
         AgentInfo agentInfo = findOne(agentID);
-        if (agentInfo == null) { return null; }
+        if (agentInfo == null) return null;
         int modelType = agentInfo.getModelType();
         List<String> modelIds = new ArrayList<>();
         switch (modelType) {
@@ -224,7 +231,7 @@ public class AgentInfoDao {
                 AgentMountQAExample qaExample = new AgentMountQAExample();
                 qaExample.createCriteria().andAgentIdEqualTo(agentID);
                 List<AgentMountQABO> qaboList = QAmapper.selectByExample(qaExample);
-                for (AgentMountQABO qabo : qaboList) {
+                for (AgentMountQABO qabo:qaboList) {
                     modelIds.add(qabo.getQaId());
                 }
                 break;
@@ -233,7 +240,7 @@ public class AgentInfoDao {
                 AgentMountKGExample kgExample = new AgentMountKGExample();
                 kgExample.createCriteria().andAgentIdEqualTo(agentID);
                 List<AgentMountKGBO> kgboList = KGmapper.selectByExample(kgExample);
-                for (AgentMountKGBO kgbo : kgboList) {
+                for (AgentMountKGBO kgbo:kgboList) {
                     modelIds.add(kgbo.getKgId());
                 }
                 break;
@@ -242,7 +249,7 @@ public class AgentInfoDao {
                 AgentMountMRExample mrExample = new AgentMountMRExample();
                 mrExample.createCriteria().andAgentIdEqualTo(agentID);
                 List<AgentMountMRBO> mrboList = MRmapper.selectByExample(mrExample);
-                for (AgentMountMRBO mrbo : mrboList) {
+                for (AgentMountMRBO mrbo:mrboList) {
                     modelIds.add(mrbo.getMrId());
                 }
                 break;
@@ -251,7 +258,7 @@ public class AgentInfoDao {
                 AgentMountWDExample wdExample = new AgentMountWDExample();
                 wdExample.createCriteria().andAgentIdEqualTo(agentID);
                 List<AgentMountWDBO> wdboList = WDmapper.selectByExample(wdExample);
-                for (AgentMountWDBO wdbo : wdboList) {
+                for (AgentMountWDBO wdbo:wdboList) {
                     modelIds.add(wdbo.getWdId());
                 }
                 break;

@@ -7,16 +7,14 @@ import com.cusc.cuscai.entity.apibo.AgentModelBO;
 import com.cusc.cuscai.service.AIIEService;
 import com.cusc.cuscai.service.AgentService;
 import com.cusc.cuscai.util.Result;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 /**
  * 业务平台交互引擎归入AI交互引擎
@@ -41,7 +39,6 @@ public class AIIEController {
     @ApiOperation("获取目前现有的模型")
     @PostMapping("/getModels")
     public Result getModels(@RequestParam("agentId") @ApiParam(value = "agentId", required = true) Integer agentId) {
-        System.out.println("agent id == "+ agentId);
         if (!agentService.isAgentExist(agentId)) {
             return Result.fail(41100, String.format("Agent : %d 不存在", agentId));
         }

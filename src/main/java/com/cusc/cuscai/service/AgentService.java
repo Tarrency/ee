@@ -1,5 +1,7 @@
 package com.cusc.cuscai.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dao.AgentInfoDao;
 import com.cusc.cuscai.entity.apibo.AgentBO;
 import com.cusc.cuscai.entity.apibo.AgentModelBO;
@@ -44,8 +46,7 @@ public class AgentService {
         }
         List<AgentBO> resbo = new ArrayList<>();
         for (AgentInfoBO bo : resdata) {
-            AgentModelBO agentModelBO = agentInfoDao.searchAgentModels(bo.getAgentId());
-            resbo.add(new AgentBO(bo, agentModelBO.getModelIds()));
+            resbo.add(new AgentBO(bo));
         }
         return resbo;
     }
@@ -62,9 +63,7 @@ public class AgentService {
         if (resdata == null || resdata.isEmpty()) {
             return null;
         } else {
-            AgentInfoBO bo = resdata.get(0);
-            AgentModelBO agentModelBO = agentInfoDao.searchAgentModels(bo.getAgentId());
-            return new AgentBO(bo, agentModelBO.getModelIds());
+            return new AgentBO(resdata.get(0));
         }
     }
 
@@ -72,18 +71,46 @@ public class AgentService {
         agentInfoDao.delete(adminID, agentID);
     }
 
-    public Integer newAgent(Integer adminID, String agentName, int modelType, List<String> modelIds) {
+    /**
+     * agentDatabase = {"agentName":电信，"QA":电信史,"scene":问答,"词表":禁用敏感词库、电信词库}
+     */
+    public Integer newAgent(Integer adminID, String agentDatabase) {
         try {
-            return agentInfoDao.newAgent(adminID, agentName, modelType, modelIds);
+            JSONObject obj = JSON.parseObject(agentDatabase);
+            String agentName = obj.getString("agentName");
+            List<String> QA_ids = splitIds(obj.getString("qa"));
+            List<String> kg_ids = splitIds(obj.getString("kg"));
+            List<String> mr_ids = splitIds(obj.getString("mr"));
+            List<String> voc_ids = splitIds(obj.getString("voc"));
+            return agentInfoDao.newAgent(adminID, agentName, QA_ids, kg_ids, mr_ids, voc_ids);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    public void changeAgent(int adminID, int agentID, String agentName, int modelType, List<String> modelIds) {
+    List<String> splitIds(String text) {
+        List<String> ids = new ArrayList<>();
+        for (String s : text.split(",")) {
+            if (!s.isEmpty()) {
+                ids.add(s);
+            }
+        }
+        return ids;
+    }
+
+    /**
+     * agentDatabase = {"agentName":电信，"QA":电信史,"scene":问答,"词表":禁用敏感词库、电信词库}
+     */
+    public void changeAgent(Integer adminID, Integer agentID, String agentDatabase) {
         try {
-            agentInfoDao.changeAgent(adminID, agentID, agentName, modelType, modelIds);
+            JSONObject obj = JSON.parseObject(agentDatabase);
+            String agentName = obj.getString("agentName");
+            List<String> QA_ids = splitIds(obj.getString("qa"));
+            List<String> kg_ids = splitIds(obj.getString("kg"));
+            List<String> mr_ids = splitIds(obj.getString("mr"));
+            List<String> voc_ids = splitIds(obj.getString("voc"));
+            agentInfoDao.changeAgent(adminID, agentID, agentName, QA_ids, kg_ids, mr_ids, voc_ids);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
