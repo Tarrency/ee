@@ -95,7 +95,7 @@ public class WordInfoDao {
 	public void deleteByIds(Iterable<java.lang.Integer> ids){
 		WordInfoExample example=new WordInfoExample();
 		example.createCriteria().andWordIdIn(Lists.newArrayList(ids));
-		 mapper.deleteByExample(example);
+		mapper.deleteByExample(example);
 	}
 
 	public void deleteAll(){
