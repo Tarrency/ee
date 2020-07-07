@@ -1,5 +1,6 @@
 package com.cusc.cuscai.dao;
 
+import com.cusc.cuscai.entity.bo.KnowledgeBaseBO;
 import com.cusc.cuscai.entity.bo.KnowledgeInfoBO;
 import com.cusc.cuscai.entity.model.KnowledgeBase;
 import com.cusc.cuscai.entity.model.KnowledgeInfo;
@@ -19,6 +20,18 @@ public class QAKnowledgeDao {
     @Autowired
     private KnowledgeInfoMapper mapper;
 
+    public List<KnowledgeInfoBO> findByKeyword(String keyword){
+        KnowledgeInfoExample example = new KnowledgeInfoExample();
+        example.createCriteria().andWordLike('%' + keyword + '%');
+        return mapper.selectByKIExample(example);
+    }
+
+    public List<KnowledgeInfoBO> findByKeywordAndKB(String keyword,String KBName){
+        KnowledgeInfoExample example = new KnowledgeInfoExample();
+        example.createCriteria().andWordLike('%' + keyword + '%');
+        return mapper.selectByKIExample(example);
+    }
+
     public boolean exists(java.lang.Integer id){
         if(id == null){
             return false;
@@ -26,15 +39,6 @@ public class QAKnowledgeDao {
         KnowledgeInfoExample example= new KnowledgeInfoExample();
         example.createCriteria().andKnowledgeIdEqualTo(id);
         return mapper.countByExample(example) > 0;
-    }
-
-    public KnowledgeBase saveKB(KnowledgeBase record){
-        if(!exists(record.getKBID())){
-            mapper.insertSelectiveKB(record);
-        }else {
-            mapper.updateByPrimaryKeySelectiveKB(record);
-        }
-        return record;
     }
 
     public int insertBatch(List<KnowledgeInfo> list){
@@ -45,24 +49,6 @@ public class QAKnowledgeDao {
         KnowledgeInfoExample example = new KnowledgeInfoExample();
         example.createCriteria().andWordIdIn(Lists.newArrayList(ids));
         mapper.deleteByKIExample(example);
-    }
-
-    public void deleteByKBIds(Iterable<java.lang.Integer> ids){
-        KnowledgeBaseExample example = new KnowledgeBaseExample();
-        example.createCriteria().andWordIdIn(Lists.newArrayList(ids));
-        mapper.deleteByKBExample(example);
-    }
-
-    public List<KnowledgeInfoBO> findAll(String KBname){
-        KnowledgeInfoExample example = new KnowledgeInfoExample();
-        example.createCriteria().andKnowledgeBaseIdEqualTo(KBname);
-        return mapper.selectByExample(example);
-    }
-
-    public List<KnowledgeInfoBO> findByKeywordandKBname(String keyword,String KBname){
-        KnowledgeInfoExample example = new KnowledgeInfoExample();
-        example.createCriteria().andKnowledgeBaseIdEqualTo(KBname).andWordLike('%'+keyword+'%');
-        return mapper.selectByExample(example);
     }
 
     public KnowledgeInfo save(KnowledgeInfo record) {

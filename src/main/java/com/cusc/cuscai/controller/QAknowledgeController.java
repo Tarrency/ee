@@ -2,6 +2,7 @@ package com.cusc.cuscai.controller;
 
 
 import com.cusc.cuscai.entity.bo.KnowledgeInfoBO;
+import com.cusc.cuscai.entity.bo.KnowledgeBaseBO;
 import com.cusc.cuscai.service.QAknowledgeService;
 import com.cusc.cuscai.util.Result;
 import io.swagger.annotations.Api;
@@ -48,12 +49,11 @@ public class QAknowledgeController {
 
     @GetMapping("/getKnowledge")
     @ResponseBody
-    @ApiOperation("默认查询QA知识库")
-    public Result getQAKnowledge(@RequestParam("queryKey")  @ApiParam(value = "问答关键字", required = true) String queryKey,
-                                 @RequestParam("queryName")  @ApiParam(value = "知识库名", required = true) String queryName){
-        List<KnowledgeInfoBO> res= new ArrayList<KnowledgeInfoBO>();
+    @ApiOperation("查询QA知识库")
+    public Result getQAKnowledge(){
+        List<KnowledgeBaseBO> res= new ArrayList<KnowledgeBaseBO>();
         try{
-            res=qAknowledgeService.getKnowledgeList(queryKey,queryName);
+            res=qAknowledgeService.getKnowledgeList();
         }catch(Exception e){
             System.out.println(e);
             return Result.fail(40203,e.getMessage());
@@ -65,10 +65,10 @@ public class QAknowledgeController {
     @ResponseBody
     @ApiOperation("查询知识")
     public Result getKnowledge(@RequestParam("queryKey")  @ApiParam(value = "问答关键字", required = true) String queryKey,
-                               @RequestParam("queryName")  @ApiParam(value = "知识库名", required = true) String queryName){
+                               @RequestParam(value = "queryId",required = false)  @ApiParam(value = "知识库id") String queryName){
         List<KnowledgeInfoBO> res= new ArrayList<KnowledgeInfoBO>();
         try{
-            res=qAknowledgeService.getKnowledgeList(queryKey,queryName);
+            res=qAknowledgeService.getKnowledgeInfoList(queryKey,queryName);
         }catch(Exception e){
             System.out.println(e);
             return Result.fail(40203,e.getMessage());
@@ -83,15 +83,25 @@ public class QAknowledgeController {
                                   @RequestParam("newQuestion")  @ApiParam(value = "新问题", required = true) String newQuestion,
                                   @RequestParam("newAnswer")  @ApiParam(value = "新答案", required = true) String newAnswer,
                                   @RequestParam("newType")  @ApiParam(value = "新类型", required = true) String newType){
-        qAknowledgeService.updateKnowledge(Id,newQuestion,newAnswer,newType);
+        try {
+            qAknowledgeService.updateKnowledge(Id,newQuestion,newAnswer,newType);
+        }catch(Exception e){
+            System.out.println(e);
+            return Result.fail(40204,e.getMessage());
+        }
         return Result.success("成功修改知识");
     }
 
     @DeleteMapping("/deleteBase")
     @ResponseBody
     @ApiOperation("删除QA知识库")
-        public Result deleteKnowledgeBase(@RequestParam("ids")  @ApiParam(value = "知识库列表", required = true) List<Integer> ids){
-        qAknowledgeService.deleteKnowledgeBase(ids);
+        public Result deleteKnowledgeBase(@RequestParam("ids")  @ApiParam(value = "知识库列表", required = true) int ids){
+        try {
+            qAknowledgeService.deleteKnowledgeBase(ids);
+        }catch(Exception e){
+            System.out.println(e);
+            return Result.fail(40206,e.getMessage());
+        }
         return Result.success("成功删除知识库");
     }
 
@@ -99,7 +109,12 @@ public class QAknowledgeController {
     @ResponseBody
     @ApiOperation("删除QA知识")
     public Result deleteKnowledge(@RequestParam("Ids")  @ApiParam(value = "词语列表", required = true) List<Integer> Ids){
-        qAknowledgeService.deleteKnowledge(Ids);
+        try{
+            qAknowledgeService.deleteKnowledge(Ids);
+        }catch(Exception e){
+            System.out.println(e);
+            return Result.fail(40205,e.getMessage());
+        }
         return Result.success("成功删除知识");
     }
 

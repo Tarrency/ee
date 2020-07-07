@@ -87,7 +87,7 @@ public class KnowledgeInfoExample extends AbstractExample<KnowledgeInfoBO>{
         }
 
         public Criteria andWordLike(String value) {
-            addCriterion("word like", value, "word");
+            addCriterion("question like", value, "question");
             return (Criteria) this;
         }
 
@@ -98,11 +98,6 @@ public class KnowledgeInfoExample extends AbstractExample<KnowledgeInfoBO>{
 
         public Criteria andKnowledgeIdEqualTo(Integer value) {
             addCriterion("Id =", value, "knowledge_id");
-            return (Criteria) this;
-        }
-
-        public Criteria andKnowledgeBaseIdEqualTo(String value) {
-            addCriterion("base_id =", value, "knowledge_id");
             return (Criteria) this;
         }
 

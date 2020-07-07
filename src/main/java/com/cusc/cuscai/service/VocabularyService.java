@@ -42,7 +42,7 @@ public class VocabularyService {
 
 
     //获取词汇信息
-    public List<WordBO> getWordList(int vcbid, String keyword) {
+    public List<WordBO>  getWordList(int vcbid, String keyword) {
         List<WordBO> resbo= new ArrayList<WordBO>();
         List<WordInfoBO>  resdata= new ArrayList<WordInfoBO>();
         if(keyword == null || keyword.length() ==0)

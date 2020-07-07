@@ -43,6 +43,13 @@ public class KnowledgeBaseExample extends AbstractExample<KnowledgeBaseBO>{
 
         protected List<Criterion> criteria;
 
+        protected void addCriterion(String condition) {
+            if (condition == null) {
+                throw new RuntimeException("Value for condition cannot be null");
+            }
+            criteria.add(new Criterion(condition));
+        }
+
         protected void addCriterion(String condition, Object value, String property) {
             if (value == null) {
                 throw new RuntimeException("Value for " + property + " cannot be null");
@@ -50,8 +57,25 @@ public class KnowledgeBaseExample extends AbstractExample<KnowledgeBaseBO>{
             criteria.add(new Criterion(condition, value));
         }
 
+        protected void addCriterion(String condition, Object value1, Object value2, String property) {
+            if (value1 == null || value2 == null) {
+                throw new RuntimeException("Between values for " + property + " cannot be null");
+            }
+            criteria.add(new Criterion(condition, value1, value2));
+        }
+
         public Criteria andWordIdIn(List<Integer> values) {
             addCriterion("id in", values, "wordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andKnowledgeBaseIdIsNotNull(){
+            addCriterion("id is not null");
+            return (Criteria)this;
+        }
+
+        public Criteria andKnowledgeBaseIdEqualTo(Integer value) {
+            addCriterion("base_id =", value, "knowledge_id");
             return (Criteria) this;
         }
     }

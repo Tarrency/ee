@@ -1,6 +1,8 @@
 package com.cusc.cuscai.service;
 
 import com.cusc.cuscai.dao.QAKnowledgeDao;
+import com.cusc.cuscai.dao.QAKnowledgeBaseDao;
+import com.cusc.cuscai.entity.bo.KnowledgeBaseBO;
 import com.cusc.cuscai.entity.bo.KnowledgeInfoBO;
 import com.cusc.cuscai.entity.model.KnowledgeBase;
 import com.cusc.cuscai.entity.model.KnowledgeInfo;
@@ -15,11 +17,13 @@ public class QAknowledgeService {
 
     @Autowired
     private QAKnowledgeDao qaKnowledgeDao;
+    @Autowired
+    private QAKnowledgeBaseDao qaKnowledgeBaseDao;
 
     public void newKB(String QAKBName){
         KnowledgeBase newkb = new KnowledgeBase();
         newkb.setKBName(QAKBName);
-        qaKnowledgeDao.saveKB(newkb);
+        qaKnowledgeBaseDao.saveKB(newkb);
     }
 
     public int insertKnowledge(Integer KBID,List<String> knowledges){
@@ -30,7 +34,7 @@ public class QAknowledgeService {
         }
         return qaKnowledgeDao.insertBatch(knowledgeList);
     }
-
+//修改知识
     public void updateKnowledge(int knowledgeId,String question,String answer,String type){
         KnowledgeInfo knowledgeInfo = new KnowledgeInfo();
         knowledgeInfo.setKnowledgeId(knowledgeId);
@@ -40,16 +44,27 @@ public class QAknowledgeService {
         qaKnowledgeDao.save(knowledgeInfo);
     }
 
-    public void deleteKnowledgeBase(List<Integer> knowledgeBaseIds) {
-        qaKnowledgeDao.deleteByKBIds(knowledgeBaseIds);
+    public void deleteKnowledgeBase(int knowledgeBaseIds) {
+        qaKnowledgeBaseDao.delete(knowledgeBaseIds);
     }
 
-    public List<KnowledgeInfoBO> getKnowledgeList(String queryKey,String queryName){
+    public List<KnowledgeBaseBO> getKnowledgeList(){
+        List<KnowledgeBaseBO> resdata = new ArrayList<KnowledgeBaseBO>();
+        try {
+            resdata = qaKnowledgeBaseDao.findAll();
+        }catch (Exception e){
+            throw e;
+        }
+        return resdata;
+    }
+//获取知识信息
+    public List<KnowledgeInfoBO> getKnowledgeInfoList(String queryKey,String queryName){
         List<KnowledgeInfoBO> resdata = new ArrayList<KnowledgeInfoBO>();
-        if (queryKey == null || queryKey.length() ==0)
-            resdata = qaKnowledgeDao.findAll(queryName);
-        else
-            resdata = qaKnowledgeDao.findByKeywordandKBname(queryKey,queryName);
+        if(queryName == null || queryName.length() == 0 ){
+            resdata = qaKnowledgeDao.findByKeyword(queryKey);
+        }else {
+            resdata = qaKnowledgeDao.findByKeywordAndKB(queryKey,queryName);
+        }
         return resdata;
     }
 

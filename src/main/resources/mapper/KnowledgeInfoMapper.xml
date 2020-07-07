@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cusc.cuscai.mapper.KnowledgeInfoMapper">
-    <resultMap id="BaseResultMap" type="com.cusc.cuscai.entity.model.KnowledgeInfo">
-        <id column="Id" property="KnowledgeId" jdbcType="INTEGER" />
-        <result column="base_id" property="KnowledgeBaseId" jdbcType="INTEGER" />
+    <resultMap id="KIResultMap" type="com.cusc.cuscai.entity.model.KnowledgeInfo">
+        <id column="Id" property="Id" jdbcType="INTEGER" />
+        <result column="base_id" property="baseId" jdbcType="INTEGER" />
         <result column="question" property="question" jdbcType="VARCHAR" />
         <result column="answer" property="answer" jdbcType="VARCHAR" />
         <result column="type" property="type" jdbcType="VARCHAR" />
-        <result column="update_time" property="KnowledgeUpdateTime" jdbcType="TIMESTAMP" />
-
+        <result column="update_time" property="knowledgeUpdateTime" jdbcType="TIMESTAMP" />
     </resultMap>
+    <resultMap id="KI_ResultMap" type="com.cusc.cuscai.entity.bo.KnowledgeInfoBO" extends="KIResultMap" />
+
+    <resultMap id="KBResultMap" type="com.cusc.cuscai.entity.model.KnowledgeBase">
+        <id column="id" property="KBID" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="KB_ResultMap" type="com.cusc.cuscai.entity.model.KnowledgeBase" extends="KBResultMap"/>
 
     <sql id="Example_Where_Clause">
         <where>
@@ -69,61 +75,19 @@
             </foreach>
         </where>
     </sql>
-    <sql id="Base_Column_List">
-        Id, base_id, question, answer, type, KnowledgeUpdateTime
-    </sql>
 
     <insert id="insertBatch"  >
         insert into knowledge_info(Id,base_id,question,answer,type,update_time)
         <foreach collection="list" item="item" index="index" separator=",">
-            (DEFAULT , #{item.Id,jdbcType=INTEGER}, #{item.baseid,jdbcType=INTEGER},#{item.question,jdbcType=VARCHAR},
+            (DEFAULT , #{item.Id,jdbcType=INTEGER}, #{item.baseId,jdbcType=INTEGER},#{item.question,jdbcType=VARCHAR},
             #{item.answer,jdbcType=TIMESTAMP},#{item.type,jdbcType=TIMESTAMP},#{item.knowledgeUpdateTime,jdbcType=TIMESTAMP})
         </foreach>
     </insert>
 
-    <insert id="insertSelectiveKB" parameterType="com.cusc.cuscai.entity.model.KnowledgeBase">
-        insert into qa_knowledge_base
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="KBID != null">
-                id,
-            </if>
-            <if test="KBName != null">
-                name,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="KBID != null">
-                #{id,jdbcType=INTEGER},
-            </if>
-            <if test="KBName != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
-        </trim>
-    </insert>
-
-    <update id="updateByPrimaryKeySelectiveKB" parameterType="com.cusc.cuscai.entity.model.KnowledgeBase">
-        insert into qa_knowledge_base
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="KBID != null">
-                id,
-            </if>
-            <if test="KBName != null">
-                name,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="KBID != null">
-                #{id,jdbcType=INTEGER},
-            </if>
-            <if test="KBName != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
-        </trim>
-    </update>
-
-
-
-    <select id="selectByExample" parameterType="com.cusc.cuscai.entity.model.KnowledgeInfoExample">
+    <sql id="Base_Column_List">
+        Id,base_id,question,answer,type,update_time
+    </sql>
+    <select id="selectByKIExample" parameterType="com.cusc.cuscai.entity.model.KnowledgeInfoExample" resultMap="KIResultMap">
         select
         <if test="distinct" >
             distinct
@@ -141,14 +105,70 @@
         </if>
     </select>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.cusc.cuscai.entity.model.KnowledgeBase">
-        update qa_knowledge_base
+    <insert id="insertSelectiveKI" parameterType="com.cusc.cuscai.entity.model.KnowledgeInfo">
+        insert into knowledge_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Id != null" >
+                Id
+            </if>
+            <if test="baseId != null" >
+                base_id
+            </if>
+            <if test="question != null" >
+                question
+            </if>
+            <if test="answer != null" >
+                answer
+            </if>
+            <if test="type != null" >
+                type
+            </if>
+            <if test="knowledgeUpdateTime != null" >
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix= ")" suffixOverrides="," >
+            <if test="Id != null">
+                #{Id,jdbcType=INTEGER}
+            </if>
+            <if test="baseId != null">
+                #{baseId,jdbcType=INTEGER}
+            </if>
+            <if test="question != null">
+                #{question,jdbcType=VARCHAR}
+            </if>
+            <if test="answer != null">
+                #{answer,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR}
+            </if>
+            <if test="knowledgeUpdateTime != null">
+                #{knowledgeUpdateTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelectiveKI" parameterType="com.cusc.cuscai.entity.model.KnowledgeInfo">
+        update knowledge_info
         <set>
-            <if test="KBName != null">
-                name = #{KBName,jdbcType=VARCHAR},
+            <if test="baseId != null">
+                base_id = #{baseId,jdbcType=INTEGER},
+            </if>
+            <if test="question != null">
+                question = #{question,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null">
+                answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="knowledgeUpdateTime != null">
+                update_time = #{knowledgeUpdateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where id = #{KBID,jdbcType=INTEGER}
+        where Id = #{Id,jdbcType=INTEGER}
     </update>
 
     <delete id="deleteByKIExample" parameterType="com.cusc.cuscai.entity.model.KnowledgeInfoExample">
@@ -158,10 +178,10 @@
         </if>
     </delete>
 
-    <delete id="deleteByKBExample" parameterType="com.cusc.cuscai.entity.model.KnowledgeBaseExample">
-        delete from qa_knowledge_base
+    <select id="countByExample" parameterType="com.cusc.cuscai.entity.model.KnowledgeInfoExample" resultType="java.lang.Integer">
+        select count(*) from knowledge_info
         <if test="_parameter != null" >
             <include refid="Example_Where_Clause" />
         </if>
-    </delete>
+    </select>
 </mapper>

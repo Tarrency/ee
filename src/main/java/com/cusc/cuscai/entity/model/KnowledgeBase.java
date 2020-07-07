@@ -3,7 +3,7 @@ package com.cusc.cuscai.entity.model;
 public class KnowledgeBase {
     private Integer KBID;
 
-    private String KBName;
+    private String name;
 
     public Integer getKBID() {
         return KBID;
@@ -14,10 +14,10 @@ public class KnowledgeBase {
     }
 
     public String getKBName() {
-        return KBName;
+        return name;
     }
 
     public void setKBName(String KBName) {
-        this.KBName = KBName;
+        this.name = KBName;
     }
 }
