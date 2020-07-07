@@ -1,5 +1,6 @@
 package com.cusc.cuscai.service.kgService;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.kgEntity.Chairman;
 import com.cusc.cuscai.entity.kgEntity.Organization;
@@ -10,14 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface KGServer {
-    Person addNode(Person person);
-    Organization addNode(Organization organization);
-    Person findPersonById(long id);
-    Person findPersonByName(String name);
-    Organization findOrgById(long id);
-    List findNeiborByName(String name);
-    Person modifyPerson(long id, String name, String desc, String sex);
-    void deletePersonById(long id);
+//    Person addNode(Person person);
+//    Organization addNode(Organization organization);
+    Object addNode(JSONObject propertyList);
+    Object findNodeByID(long id);
+    List<Object> findNodeByName(String name);
+    Object modifyNode(long id, JSONObject propertyList);
+    void deleteNode(long id);
 
     Chairman addChairman(String name1, String name2);
 

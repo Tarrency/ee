@@ -1,16 +1,17 @@
 package com.cusc.cuscai.service.kgService.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dao.kgdao.*;
 import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.kgEntity.*;
 import com.cusc.cuscai.exception.GlobalException;
 import com.cusc.cuscai.service.kgService.KGServer;
-import com.cusc.cuscai.util.JsonSimple;
 import com.cusc.cuscai.util.POIUtil;
 import com.cusc.cuscai.util.UUIDUtil;
 import org.neo4j.driver.internal.InternalPath;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
+import org.neo4j.ogm.response.model.NodeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -20,6 +21,8 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.lang.String.*;
 
 @Service
 public class KGServiceImpl implements KGServer {
@@ -36,73 +39,111 @@ public class KGServiceImpl implements KGServer {
     Neo4jDao neo4jDao;
 
     /**
-    注意 添加和修改节点都需要区分是那种节点。因为有不同的属性。上传同样如此，上传需要区分节点类型。
+     * 实体的增删改查
      */
 
-    @Override
-    public Person addNode(Person person){ //添加Person节点
-        return personRepository.save(person);
-    }
 
+//    @Override
+//    public Person addNode(Person person){ //添加Person节点
+//        return personRepository.save(person);
+//    }
+//    @Override
+//    public Organization addNode(Organization org){ //添加Person节点
+//        return organizationRepository.save(org);
+//    }
+    // 增
     @Override
-    public Organization addNode(Organization org){ //添加Person节点
-        return organizationRepository.save(org);
-    }
-
-    @Override
-    public Person findPersonById(long id){
-        Person p = personRepository.findById(id).get();
-        System.out.println(JsonSimple.toJson(p));
-        return p;
-    }
-
-    @Override
-    public Person findPersonByName(String name){
-        Person p = personRepository.findByName(name);
-        System.out.println(JsonSimple.toJson(p));
-        return p;
-    }
-
-    @Override
-    public Organization findOrgById(long id){
-        Organization o = organizationRepository.findById(id).get();
-        System.out.println(JsonSimple.toJson(o));
-        return o;
-    }
-
-    @Override
-    public List findNeiborByName(String name){
-//        Person node = personRepository.findByName(name); //节点自己
-//        System.out.println(JsonSimple.toJson(node));
-        // 目前只映射了两类实体 ，故查询在这两类实体中的邻居节点；后续改
-        List<Person> plist = personRepository.findNeighbor(name);
-        List<Organization> olist = organizationRepository.findNeighbor(name);
-        List res = new ArrayList();
-        res.add(plist);
-        res.add(olist);
-        return res;
-    }
-
-    @Override
-    public Person modifyPerson(long id, String name, String desc, String sex) { //修改Person节点
-        Person person = findPersonById(id);
-        if(!name.equals("") && name!=null && !name.equals("null")){
-            person.setName(name);
+    public Object addNode(JSONObject propertyList) {
+        List<Object> keys = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        String label = null;
+        for(Object key: propertyList.keySet()){
+            String str = "label";
+            if(str.equals(key)){
+                label = (String) propertyList.get("label");
+                continue;
+            }
+            keys.add(key);
+            values.add(propertyList.get(key));
         }
-        if(!desc.equals("") && desc!=null && !desc.equals("null")){
-            person.setDesc(desc);
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "create (n:`" + label + "` {" ;
+        for(int i=0; i<keys.size(); i++) {
+            Object key = keys.get(i);
+            Object value = values.get(i);
+            if(i == keys.size()-1) {
+                cypher += "`" + key + "`:'" + value + "'}) return n";
+            } else {
+                cypher += "`" + key + "`:'" + value + "',";
+            }
         }
-        if(!sex.equals("") && sex!=null && !sex.equals("null")){
-            person.setSex(sex);
-        }
-        System.out.println(person);
-        return personRepository.save(person);
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        Map<String, Object> each = iterator.next();
+        Object addNode = each.get('n');
+        return addNode;
+    }
+
+    // 查
+    @Override
+    public Object findNodeByID(long id){
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "MATCH (n) where n.name = '" + id + "' RETURN (n)";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        Map<String, Object> each = iterator.next();
+        Object node = each.get("n");
+        return node;
     }
 
     @Override
-    public void deletePersonById(long id){
-        personRepository.deleteById(id);
+    public List<Object> findNodeByName(String name) {
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "MATCH (n) where n.name = '" + name + "' RETURN (n)";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        List<Object> ans = new ArrayList<>();
+        while(iterator.hasNext()) {
+            Map<String, Object> each = iterator.next();
+            NodeModel node = (NodeModel) each.get("n");
+            ans.add(node);
+        }
+        return ans;
     }
+
+    // 改
+    @Override
+    public Object modifyNode(long id, JSONObject propertyList) {
+        List<Object> keys = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        for(Object key: propertyList.keySet()){
+            keys.add(key);
+            values.add(propertyList.get(key));
+        }
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "MATCH (n) where id(n)=" + id;
+        for(int i=0; i<keys.size(); i++) {
+            Object key = keys.get(i);
+            Object value = values.get(i);
+            cypher += " SET n.`" + key + "`=" + "'" + value + "'";
+        }
+        cypher += " RETURN n";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        Map<String, Object> each = iterator.next();
+        Object modify = each.get("n");
+        return modify;
+    }
+
+    // 删
+    @Override
+    public void deleteNode(long id){
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "MATCH (n)-[r]-() where id(n)=" + id + " delete r";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        cypher = "MATCH (n) where id(n)=" + id + " delete n";
+        Iterator<Map<String, Object>> iterator2 = session.exec(cypher);
+    }
+
+    /**
+     * 关系
+     */
 
     @Override
     public Chairman addChairman(String name1, String name2) {

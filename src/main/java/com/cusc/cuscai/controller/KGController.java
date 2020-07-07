@@ -1,6 +1,7 @@
 package com.cusc.cuscai.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.kgEntity.Chairman;
 import com.cusc.cuscai.entity.kgEntity.Person;
@@ -55,33 +56,22 @@ public class KGController {
 
     // 正确的前后端逻辑应该是 前端选择一个实体类型，后端返回给实体属性，然后前端再输入属性具体值发给后端进行添加
     // 这些属性都应该是字符串的形式，后期改
-    @ApiOperation("添加person")
-    @PostMapping("addPerson")
-    public Result addPerson(@RequestParam("姓名") @ApiParam(value = "name", required = true) String name,
-                            @RequestParam("描述") @ApiParam(value = "born") String desc,
-                            @RequestParam("性别") @ApiParam(value = "sex") String sex) {
-        Person person = new Person();
-        person.setName(name);
-        if(!desc.equals("") && desc!=null && !desc.equals("null")){
-            person.setDesc(desc);
-        }
-        if(!sex.equals("") && sex!=null && !sex.equals("null")){
-            person.setSex(sex);
-        }
-        kgServer.addNode(person);
-        return Result.success("添加person成功", person);
+    @ApiOperation("添加实体")
+    @PostMapping("addNode")
+    public Result addNode(@RequestBody @ApiParam(value = "json字符串", required = true) JSONObject propertyList) {
+        Object node = kgServer.addNode(propertyList);
+        return Result.success("添加实体成功", node);
     }
 
-    @ApiOperation("查找人物节点")
-    @GetMapping("/findPersonById")
-    public Result findNodeById(@RequestParam("name") @ApiParam(value = "name", required = true) String name
-                                ){
-        return Result.success("查找人物节点", kgServer.findPersonByName(name));
+    @ApiOperation("查找节点")
+    @GetMapping("/findNode")
+    public Result findNodeByName(@RequestParam("name") @ApiParam(value = "name", required = true) String name){
+        return Result.success("查找节点", kgServer.findNodeByName(name));
     }
 
     @ApiOperation("查找邻居节点")
     @GetMapping("/findNerborByName")
-    public Result findNodeByName(@RequestParam("name")
+    public Result findNeighbor(@RequestParam("name")
                                  @ApiParam(value = "name", required = true) String name){
 //        List neibor = kgServer.findNeiborByName(name);
         GraphDTO neibor = kgServer.getNeibors(name);
@@ -91,22 +81,19 @@ public class KGController {
         return Result.success("查询邻居节点", neibor);
     }
 
-    @ApiOperation("修改person属性")
-    @GetMapping("/modifypersonbyId")
-    public Result modifypersonbyId(@RequestParam("id") @ApiParam(value = "id", required = true) String id,
-                                      @RequestParam("修改：姓名") @ApiParam(value = "name") String name,
-                                      @RequestParam("修改：描述") @ApiParam(value = "desc") String desc,
-                                      @RequestParam("修改：性别") @ApiParam(value = "sex") String sex){
-        System.out.println(name+desc+sex);
-        Person modify = kgServer.modifyPerson(Long.parseLong(id), name, desc, sex);
-        return Result.success("修改person成功", modify);
+    @ApiOperation("修改实体属性")
+    @PostMapping("/modifyNode")
+    public Result modifyNode(@RequestBody @ApiParam(value = "json字符串", required = true) JSONObject propertyList){
+        String id = (String) propertyList.get("id");
+        Object modify = kgServer.modifyNode(Long.parseLong(id), propertyList);
+        return Result.success("修改实体成功", modify);
     }
 
-    @ApiOperation("删除person")
-    @DeleteMapping("/deletepersonbyId")
-    public Result deletepersonbyId(@RequestParam("id")
+    @ApiOperation("删除实体")
+    @DeleteMapping("/deleteNode")
+    public Result deleteNode(@RequestParam("id")
                                        @ApiParam(value = "id", required = true) String id){
-        kgServer.deletePersonById(Long.parseLong(id));
+        kgServer.deleteNode(Long.parseLong(id));
         return Result.success("删除成功",null);
     }
 
@@ -131,21 +118,21 @@ public class KGController {
         return Result.success("文件上传成功", url);
     }
 
-    @PostMapping("/uploadExcel")
-    @ApiOperation("批量上传Person节点")
-    public Result uploadExcel(@RequestParam("file") MultipartFile file) {
-        // 传来的参数应该为：节点类型 + 文件
-        // 根据节点类型选择上传的是哪类实体，判断调用对应service接口
-        // 这里只写person
-        if (file == null || file.isEmpty()) {
-            return Result.fail(500, "文件有误");
-        }
-        List<Person> persons = kgServer.getPersonFromFile(file);
-        for(Person p : persons){
-            kgServer.addNode(p);
-        }
-        return Result.success("批量上传成功", persons);
-    }
+//    @PostMapping("/uploadExcel")
+//    @ApiOperation("批量上传Person节点")
+//    public Result uploadExcel(@RequestParam("file") MultipartFile file) {
+//        // 传来的参数应该为：节点类型 + 文件
+//        // 根据节点类型选择上传的是哪类实体，判断调用对应service接口
+//        // 这里只写person
+//        if (file == null || file.isEmpty()) {
+//            return Result.fail(500, "文件有误");
+//        }
+//        List<Person> persons = kgServer.getPersonFromFile(file);
+//        for(Person p : persons){
+//            kgServer.addNode(p);
+//        }
+//        return Result.success("批量上传成功", persons);
+//    }
 
     @PostMapping("/uploadExcel2")
     @ApiOperation("批量导入Chairman关系")
