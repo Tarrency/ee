@@ -32,6 +32,12 @@ public class QAKnowledgeDao {
         return mapper.selectByKIExample(example);
     }
 
+    public List<KnowledgeInfoBO> findByKBID(int ID){
+        KnowledgeInfoExample example = new KnowledgeInfoExample();
+        example.createCriteria().andBaseIdEqualTo(ID);
+        return mapper.selectByKIExample(example);
+    }
+
     public boolean exists(java.lang.Integer id){
         if(id == null){
             return false;

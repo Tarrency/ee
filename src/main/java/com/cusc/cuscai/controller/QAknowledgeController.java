@@ -4,6 +4,7 @@ package com.cusc.cuscai.controller;
 import com.cusc.cuscai.entity.bo.KnowledgeInfoBO;
 import com.cusc.cuscai.entity.bo.KnowledgeBaseBO;
 import com.cusc.cuscai.service.QAknowledgeService;
+import com.cusc.cuscai.entity.model.KnowledgeInfo;
 import com.cusc.cuscai.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +38,7 @@ public class QAknowledgeController {
     @ResponseBody
     @ApiOperation("导入知识")
     public Result addKnowledge(@RequestParam("KBID") @ApiParam(value = "知识库id", required = true) Integer KBID,
-                               @RequestParam("knowledge")  @ApiParam(value = "导入库中的知识", required = true) List<String> knowledge){
+                               @RequestParam("knowledge")  @ApiParam(value = "导入库中的知识", required = true) List<KnowledgeInfo> knowledge){
         int insertcount;
         try {
             insertcount = qAknowledgeService.insertKnowledge(KBID,knowledge);
@@ -75,6 +76,21 @@ public class QAknowledgeController {
         }
         return Result.success(res);
     }
+
+    @GetMapping("/getlistByKB")
+    @ResponseBody
+    @ApiOperation("查询知识库知识")
+    public Result getKnowledgeByKB(@RequestParam("knowledgeBaseID")  @ApiParam(value = "知识库ID", required = true) int knowledgeBaseID){
+        List<KnowledgeInfoBO> res= new ArrayList<KnowledgeInfoBO>();
+        try {
+            res=qAknowledgeService.getKnowledgeListByKB(knowledgeBaseID);
+        }catch(Exception e) {
+            System.out.println(e);
+            return Result.fail(40203, e.getMessage());
+        }
+        return Result.success(res);
+    }
+
 
     @PostMapping("/updateKnowledge")
     @ResponseBody
@@ -117,5 +133,4 @@ public class QAknowledgeController {
         }
         return Result.success("成功删除知识");
     }
-
 }

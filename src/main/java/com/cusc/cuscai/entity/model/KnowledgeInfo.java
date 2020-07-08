@@ -19,9 +19,12 @@ public class KnowledgeInfo {
 
     public KnowledgeInfo(){};
 
-    public KnowledgeInfo(Integer KBID, String knowledges){
+    public KnowledgeInfo(Integer KBID, KnowledgeInfo knowledge){
         this.baseId = KBID;
-        this.question = knowledges;
+        this.question = knowledge.question;
+        this.answer = knowledge.answer;
+        this.type = knowledge.type;
+        this.knowledgeUpdateTime = new Date();
     };
 
     public Integer getKnowledgeId() {

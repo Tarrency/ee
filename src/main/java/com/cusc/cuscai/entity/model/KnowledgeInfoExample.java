@@ -101,6 +101,11 @@ public class KnowledgeInfoExample extends AbstractExample<KnowledgeInfoBO>{
             return (Criteria) this;
         }
 
+        public Criteria andBaseIdEqualTo(int value){
+            addCriterion("base_id =",value,"baseId");
+            return (Criteria) this;
+        }
+
     }
 
     public static class Criteria extends GeneratedCriteria {

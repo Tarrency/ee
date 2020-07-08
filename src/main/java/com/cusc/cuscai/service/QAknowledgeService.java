@@ -26,9 +26,9 @@ public class QAknowledgeService {
         qaKnowledgeBaseDao.saveKB(newkb);
     }
 
-    public int insertKnowledge(Integer KBID,List<String> knowledges){
+    public int insertKnowledge(Integer KBID,List<KnowledgeInfo> knowledges){
         List<KnowledgeInfo> knowledgeList = new ArrayList<KnowledgeInfo>();
-        for(String knowledgeStr:knowledges){
+        for(KnowledgeInfo knowledgeStr:knowledges){
             KnowledgeInfo knowledge = new KnowledgeInfo(KBID,knowledgeStr);
             knowledgeList.add(knowledge);
         }
@@ -65,6 +65,12 @@ public class QAknowledgeService {
         }else {
             resdata = qaKnowledgeDao.findByKeywordAndKB(queryKey,queryName);
         }
+        return resdata;
+    }
+
+    public List<KnowledgeInfoBO> getKnowledgeListByKB(int KbId){
+        List<KnowledgeInfoBO> resdata = new ArrayList<KnowledgeInfoBO>();
+        resdata = qaKnowledgeDao.findByKBID(KbId);
         return resdata;
     }
 
