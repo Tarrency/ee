@@ -88,6 +88,7 @@
     <sql id="Base_Column_List">
         Id,base_id,question,answer,type,update_time
     </sql>
+
     <select id="selectByKIExample" parameterType="com.cusc.cuscai.entity.model.KnowledgeInfoExample" resultMap="KIResultMap">
         select
         <if test="distinct" >

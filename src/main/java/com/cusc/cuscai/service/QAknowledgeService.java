@@ -59,12 +59,12 @@ public class QAknowledgeService {
         return resdata;
     }
 //获取知识信息
-    public List<KnowledgeInfoBO> getKnowledgeInfoList(String queryKey,String queryName){
+    public List<KnowledgeInfoBO> getKnowledgeInfoList(String queryKey,Integer queryId){
         List<KnowledgeInfoBO> resdata = new ArrayList<KnowledgeInfoBO>();
-        if(queryName == null || queryName.length() == 0 ){
+        if(queryId == null){
             resdata = qaKnowledgeDao.findByKeyword(queryKey);
         }else {
-            resdata = qaKnowledgeDao.findByKeywordAndKB(queryKey,queryName);
+            resdata = qaKnowledgeDao.findByKeywordAndKB(queryKey,queryId);
         }
         return resdata;
     }
@@ -78,4 +78,5 @@ public class QAknowledgeService {
     public void deleteKnowledge(List<Integer> knowledgeIds) {
         qaKnowledgeDao.deleteByKIIds(knowledgeIds);
     }
+
 }

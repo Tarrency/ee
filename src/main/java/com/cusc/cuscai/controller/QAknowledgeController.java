@@ -90,10 +90,10 @@ public class QAknowledgeController {
     @ResponseBody
     @ApiOperation("查询知识")
     public Result getKnowledge(@RequestParam("queryKey")  @ApiParam(value = "问答关键字", required = true) String queryKey,
-                               @RequestParam(value = "queryId",required = false)  @ApiParam(value = "知识库id") String queryName){
+                               @RequestParam(value = "queryId",required = false)  @ApiParam(value = "知识库id") Integer queryId){
         List<KnowledgeInfoBO> res= new ArrayList<KnowledgeInfoBO>();
         try{
-            res=qAknowledgeService.getKnowledgeInfoList(queryKey,queryName);
+            res=qAknowledgeService.getKnowledgeInfoList(queryKey,queryId);
         }catch(Exception e){
             System.out.println(e);
             return Result.fail(40203,e.getMessage());
@@ -112,7 +112,7 @@ public class QAknowledgeController {
             System.out.println(e);
             return Result.fail(40203, e.getMessage());
         }
-        return Result.success(res);
+        return Result.success("知识查询成功",res);
     }
 
 
@@ -157,4 +157,5 @@ public class QAknowledgeController {
         }
         return Result.success("成功删除知识");
     }
+
 }

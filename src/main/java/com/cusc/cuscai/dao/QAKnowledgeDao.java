@@ -26,9 +26,9 @@ public class QAKnowledgeDao {
         return mapper.selectByKIExample(example);
     }
 
-    public List<KnowledgeInfoBO> findByKeywordAndKB(String keyword,String KBName){
+    public List<KnowledgeInfoBO> findByKeywordAndKB(String keyword,Integer KBId){
         KnowledgeInfoExample example = new KnowledgeInfoExample();
-        example.createCriteria().andWordLike('%' + keyword + '%');
+        example.createCriteria().andWordLike('%' + keyword + '%').andBaseIdEqualTo(KBId);
         return mapper.selectByKIExample(example);
     }
 
