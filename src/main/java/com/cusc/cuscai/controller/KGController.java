@@ -12,11 +12,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.neo4j.driver.types.Node;
+import org.neo4j.ogm.response.model.NodeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.util.*;
 
 @Api(tags = "KG相关接口") //一个tag
 @RestController
@@ -55,7 +56,6 @@ public class KGController {
     }
 
     // 正确的前后端逻辑应该是 前端选择一个实体类型，后端返回给实体属性，然后前端再输入属性具体值发给后端进行添加
-    // 这些属性都应该是字符串的形式，后期改
     @ApiOperation("添加实体")
     @PostMapping("addNode")
     public Result addNode(@RequestBody @ApiParam(value = "json字符串", required = true) JSONObject propertyList) {
@@ -64,14 +64,63 @@ public class KGController {
     }
 
     @ApiOperation("查找节点")
-    @GetMapping("/findNode")
+    @PostMapping("/findNode")
     public Result findNodeByName(@RequestParam("name") @ApiParam(value = "name", required = true) String name){
-        return Result.success("查找节点", kgServer.findNodeByName(name));
+        System.out.println(name);
+        List<Object> nodes = kgServer.findNodeByName(name);
+        List<Map<String, Object>> res = new ArrayList<>();
+        for(int i=0; i<nodes.size(); i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", ((NodeModel) nodes.get(i)).getId());
+            map.put("type",  ((NodeModel) nodes.get(i)).getLabels()[0]);
+            for(int j=0; j<((NodeModel) nodes.get(i)).getPropertyList().size(); j++) {
+                if(((NodeModel) nodes.get(i)).getPropertyList().get(j).getKey().equals("name")) {
+                    map.put("name",  ((NodeModel) nodes.get(i)).getPropertyList().get(j).getValue());
+                }
+            }
+            res.add(map);
+        }
+        return Result.success("查找节点", res);
+    }
+
+    @ApiOperation("查找节点内容")
+    @PostMapping("/findDetail")
+    public Result findNodeByID(@RequestParam(value = "id") @ApiParam(value = "id", required = true) String id){
+//        for(int i=0; i<ids.size(); i++) {
+//            String id = ids.get(i).toString();
+//            System.out.println(id);
+//            Object node = kgServer.findNodeByID(Long.parseLong(id));
+//            List<Map<String, Object>> res = new ArrayList<>();
+//        }
+        System.out.println(id);
+        List<Map<String, Object>> res = new ArrayList<>();
+        Object node = kgServer.findNodeByID(Long.parseLong(id));
+        NodeModel n = (NodeModel) node;
+        Map<String, Object> m = new HashMap<>();
+        m.put("property", "id");
+        m.put("content", n.getId());
+        res.add(m);
+        for(int i=0; i<n.getPropertyList().size(); i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("property", n.getPropertyList().get(i).getKey());
+            map.put("content", n.getPropertyList().get(i).getValue());
+            res.add(map);
+        }
+        return Result.success("查找节点内容", res);
     }
 
     @ApiOperation("查找邻居节点")
-    @GetMapping("/findNerborByName")
-    public Result findNeighbor(@RequestParam("name")
+    @PostMapping("/findNerborByID")
+    public Result findNeighbors(@RequestParam("id")
+                               @ApiParam(value = "id", required = true) String id){
+        System.out.println(id);
+        List<Map<String, Object>> res = kgServer.getNeighbors(Long.parseLong(id));
+        return Result.success("查询邻居节点", res);
+    }
+
+    @ApiOperation("可视化")
+    @PostMapping("/findNerborByName")
+    public Result paint(@RequestParam("name")
                                  @ApiParam(value = "name", required = true) String name){
 //        List neibor = kgServer.findNeiborByName(name);
         GraphDTO neibor = kgServer.getNeibors(name);
@@ -84,8 +133,10 @@ public class KGController {
     @ApiOperation("修改实体属性")
     @PostMapping("/modifyNode")
     public Result modifyNode(@RequestBody @ApiParam(value = "json字符串", required = true) JSONObject propertyList){
-        String id = (String) propertyList.get("id");
-        Object modify = kgServer.modifyNode(Long.parseLong(id), propertyList);
+        Integer id = (Integer) propertyList.get("id");
+        System.out.println(id);
+        propertyList.remove("id");
+        Object modify = kgServer.modifyNode(id.longValue(), propertyList);
         return Result.success("修改实体成功", modify);
     }
 
@@ -98,12 +149,13 @@ public class KGController {
     }
 
 
-    @ApiOperation("添加chairman关系")
-    @PostMapping("/addChairman")
-    public Result addRelation(@RequestParam("name1") @ApiParam(value = "name1", required = true) String name1,
-                                   @RequestParam("name2") @ApiParam(value = "name2", required = true) String name2){
-        Chairman new_relation = kgServer.addChairman(name1, name2);
-        return Result.success("添加chairman关系成功", new_relation) ;
+    @ApiOperation("添加关系")
+    @PostMapping("/addRelation")
+    public Result addRelation(@RequestParam("id1") @ApiParam(value = "id1", required = true) String id1,
+                              @RequestParam("id2") @ApiParam(value = "id2", required = true) String id2,
+                              @RequestParam("type") @ApiParam(value = "关系类型", required = true) String type){
+        String r = kgServer.addRelation(Long.parseLong(id1), Long.parseLong(id2), type);
+        return Result.success("添加关系", r) ;
     }
 
     @PostMapping("/upload")
@@ -134,16 +186,16 @@ public class KGController {
 //        return Result.success("批量上传成功", persons);
 //    }
 
-    @PostMapping("/uploadExcel2")
-    @ApiOperation("批量导入Chairman关系")
-    public Result uploadExcel2(@RequestParam("file") MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            return Result.fail(500, "文件有误");
-        }
-        List<Chairman> relations = kgServer.getChairmanFromFile(file);
-        for(Chairman r : relations){
-            kgServer.addChairman(r.getStart().getName(), r.getEnd().getName());
-        }
-        return Result.success("批量上传成功", relations);
-    }
+//    @PostMapping("/uploadExcel2")
+//    @ApiOperation("批量导入Chairman关系")
+//    public Result uploadExcel2(@RequestParam("file") MultipartFile file) {
+//        if (file == null || file.isEmpty()) {
+//            return Result.fail(500, "文件有误");
+//        }
+//        List<Chairman> relations = kgServer.getChairmanFromFile(file);
+//        for(Chairman r : relations){
+//            kgServer.addChairman(r.getStart().getName(), r.getEnd().getName());
+//        }
+//        return Result.success("批量上传成功", relations);
+//    }
 }

@@ -12,6 +12,7 @@ import org.neo4j.driver.internal.InternalPath;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
 import org.neo4j.ogm.response.model.NodeModel;
+import org.neo4j.ogm.response.model.RelationshipModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -27,30 +28,12 @@ import static java.lang.String.*;
 @Service
 public class KGServiceImpl implements KGServer {
     @Autowired
-    PersonRepository personRepository;
-    @Autowired
-    OrganizationRepository organizationRepository;
-    @Autowired
-    ChairmanRepository chairmanRepository;
-    @Autowired
-    PresidentRepository presidentRepository;
-
-    @Autowired
     Neo4jDao neo4jDao;
 
     /**
      * 实体的增删改查
      */
 
-
-//    @Override
-//    public Person addNode(Person person){ //添加Person节点
-//        return personRepository.save(person);
-//    }
-//    @Override
-//    public Organization addNode(Organization org){ //添加Person节点
-//        return organizationRepository.save(org);
-//    }
     // 增
     @Override
     public Object addNode(JSONObject propertyList) {
@@ -87,7 +70,7 @@ public class KGServiceImpl implements KGServer {
     @Override
     public Object findNodeByID(long id){
         Neo4jSession session = neo4jDao.open();
-        String cypher = "MATCH (n) where n.name = '" + id + "' RETURN (n)";
+        String cypher = "MATCH (n) where id(n) = " + id + " RETURN (n)";
         Iterator<Map<String, Object>> iterator = session.exec(cypher);
         Map<String, Object> each = iterator.next();
         Object node = each.get("n");
@@ -106,6 +89,35 @@ public class KGServiceImpl implements KGServer {
             ans.add(node);
         }
         return ans;
+    }
+
+    // 查询关联节点
+    @Override
+    public List<Map<String, Object>> getNeighbors(long id) {
+        Neo4jSession session = neo4jDao.open();
+        String cypher = " match (na)-[r]->(nb) where id(na) = " + id + " return r,nb";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        List<Map<String, Object>> res = new ArrayList<>();
+        while(iterator.hasNext()) {
+            Map<String, Object> each = iterator.next();
+            RelationshipModel r = (RelationshipModel) each.get("r");
+            String rtype = r.getType();
+            NodeModel node = (NodeModel) each.get("nb");
+            long nb_id = node.getId();
+            String name = "";
+//            String name = (String) node.getPropertyList().get(0).getValue();
+            for(int j=0; j<node.getPropertyList().size(); j++) {
+                if(node.getPropertyList().get(j).getKey().equals("name")) {
+                    name = (String) node.getPropertyList().get(j).getValue();
+                }
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("relation", rtype);
+            map.put("ids", nb_id);
+            map.put("names", name);
+            res.add(map);
+        }
+        return res;
     }
 
     // 改
@@ -146,13 +158,14 @@ public class KGServiceImpl implements KGServer {
      */
 
     @Override
-    public Chairman addChairman(String name1, String name2) {
-        Organization n1 = organizationRepository.findByName(name1);
-        Person n2 = personRepository.findByName(name2);
-        Chairman relation = new Chairman();
-        relation.setStart(n1);
-        relation.setEnd(n2);
-        return chairmanRepository.save(relation);
+    public String addRelation(long id1, long id2, String type) {
+        Neo4jSession session = neo4jDao.open();
+        String cypher = " match (na),(nb) where id(na) = " + id1 + " and id(nb) = " + id2 + " create (na)-[r:`" + type + "`]->(nb)" + " return r";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        List<Map<String, Object>> res = new ArrayList<>();
+        Map<String, Object> each = iterator.next();
+        RelationshipModel r = (RelationshipModel) each.get("r");
+        return r.getType();
     }
 
     @Override
@@ -178,57 +191,60 @@ public class KGServiceImpl implements KGServer {
         return "http://localhost:8080/static/" + filename;
     }
 
-    @Override
-    public List<Person> getPersonFromFile(MultipartFile file) {
-        List<Person> res = null;
-        try {
-            List<Map> list = POIUtil.parseExcel(file);
-            res = transPerson(list);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new GlobalException(500, "服务器内部错误");
-        }
-        return res;
-    }
+//    @Override
+//    public List<Person> getPersonFromFile(MultipartFile file) {
+//        List<Person> res = null;
+//        try {
+//            List<Map> list = POIUtil.parseExcel(file);
+//            res = transPerson(list);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new GlobalException(500, "服务器内部错误");
+//        }
+//        return res;
+//    }
+//
+//    @Override
+//    public List<Chairman> getChairmanFromFile(MultipartFile file) {
+//        List<Chairman> res = null;
+//        try {
+//            List<Map> list = POIUtil.parseExcel(file);
+//            res = transRelation(list);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new GlobalException(500, "服务器内部错误");
+//        }
+//        return res;
+//    }
+//
+//    public List<Person> transPerson(List<Map> list) {
+//        List<Person> res = new ArrayList<>();
+//        for (Map map : list) {
+//            Person person = new Person();
+//            person.setName((String) map.get("name"));
+//            person.setDesc((String) map.get("desc"));
+//            person.setSex((String) map.get("sex"));
+//            res.add(person);
+//        }
+//        return res;
+//    }
+//
+//    public List<Chairman> transRelation(List<Map> list) {
+//        List<Chairman> res = new ArrayList<>();
+//        for (Map map : list) {
+//            Chairman relation = new Chairman();
+//            Organization node1 = organizationRepository.findByName((String) map.get("name1"));
+//            Person node2 = personRepository.findByName((String) map.get("name2"));
+//            relation.setStart(node1);
+//            relation.setEnd(node2);
+//            res.add(relation);
+//        }
+//        return res;
+//    }
 
-    @Override
-    public List<Chairman> getChairmanFromFile(MultipartFile file) {
-        List<Chairman> res = null;
-        try {
-            List<Map> list = POIUtil.parseExcel(file);
-            res = transRelation(list);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new GlobalException(500, "服务器内部错误");
-        }
-        return res;
-    }
-
-    public List<Person> transPerson(List<Map> list) {
-        List<Person> res = new ArrayList<>();
-        for (Map map : list) {
-            Person person = new Person();
-            person.setName((String) map.get("name"));
-            person.setDesc((String) map.get("desc"));
-            person.setSex((String) map.get("sex"));
-            res.add(person);
-        }
-        return res;
-    }
-
-    public List<Chairman> transRelation(List<Map> list) {
-        List<Chairman> res = new ArrayList<>();
-        for (Map map : list) {
-            Chairman relation = new Chairman();
-            Organization node1 = organizationRepository.findByName((String) map.get("name1"));
-            Person node2 = personRepository.findByName((String) map.get("name2"));
-            relation.setStart(node1);
-            relation.setEnd(node2);
-            res.add(relation);
-        }
-        return res;
-    }
-
+    /**
+     * 统计功能
+     */
     @Override
     public List<String> getEntLabels(){
         Neo4jSession session = neo4jDao.open();
@@ -300,6 +316,8 @@ public class KGServiceImpl implements KGServer {
         System.out.println(gto.getLinks());
         return gto;
     }
+
+
 
     private GraphDTO mapToGraph(
             Iterator<Map<String, Object>> neo4jDataIterator) {

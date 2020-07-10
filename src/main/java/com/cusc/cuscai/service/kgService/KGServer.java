@@ -11,26 +11,31 @@ import java.util.List;
 import java.util.Map;
 
 public interface KGServer {
-//    Person addNode(Person person);
-//    Organization addNode(Organization organization);
+    // 实体
     Object addNode(JSONObject propertyList);
     Object findNodeByID(long id);
     List<Object> findNodeByName(String name);
     Object modifyNode(long id, JSONObject propertyList);
     void deleteNode(long id);
+    List<Map<String, Object>> getNeighbors(long id);
 
-    Chairman addChairman(String name1, String name2);
+    // 关系
+    String addRelation(long id1, long id2, String type);
 
+
+    // 批量
     String upload(MultipartFile file);
+//
+//    List<Person> getPersonFromFile(MultipartFile file);
+//    List<Chairman> getChairmanFromFile(MultipartFile file);
 
-    List<Person> getPersonFromFile(MultipartFile file);
-    List<Chairman> getChairmanFromFile(MultipartFile file);
-
+    // 统计
     List<String> getEntLabels();
     List<Map<String, Long>> countEntities();
-
     Long countRelations();
     List<String> getRelLabels();
 
+    // 可视化用
     GraphDTO getNeibors(String name);
+
 }
