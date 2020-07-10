@@ -5,15 +5,20 @@ import com.cusc.cuscai.entity.bo.KnowledgeInfoBO;
 import com.cusc.cuscai.entity.bo.KnowledgeBaseBO;
 import com.cusc.cuscai.service.QAknowledgeService;
 import com.cusc.cuscai.entity.model.KnowledgeInfo;
+import com.cusc.cuscai.entity.model.KnowledgeGet;
 import com.cusc.cuscai.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
+import com.cusc.cuscai.util.POIUtil;
+
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Api(tags = "QA知识库相关接口") //一个tag
 @RestController
@@ -38,14 +43,33 @@ public class QAknowledgeController {
     @ResponseBody
     @ApiOperation("导入知识")
     public Result addKnowledge(@RequestParam("KBID") @ApiParam(value = "知识库id", required = true) Integer KBID,
-                               @RequestParam("knowledge")  @ApiParam(value = "导入库中的知识", required = true) List<KnowledgeInfo> knowledge){
+                               @RequestParam("knowledge")  @ApiParam(value = "导入库中的知识", required = true) List<KnowledgeGet> knowledge){
         int insertcount;
         try {
             insertcount = qAknowledgeService.insertKnowledge(KBID,knowledge);
         }catch (Exception e){
             return Result.fail(40201, e.getMessage());
         }
-        return Result.success("知识导入成功");
+        return Result.success("知识导入成功",insertcount);
+    }
+
+    @PostMapping("/upload")
+    @ResponseBody
+    @ApiOperation("从文件批量导入知识")
+    public Result uploadKnowledge(@RequestParam("KBID") @ApiParam(value = "知识库id", required = true) Integer KBID,
+                                  @RequestParam("file") @ApiParam(value = "上传Excel文件", required = true) MultipartFile uploadFile){
+        if (uploadFile == null || uploadFile.isEmpty()){
+            return Result.fail(400,"文件错误");
+        }
+        try {
+            List<KnowledgeGet> datas = POIUtil.parseKnowledgeExcel(uploadFile);
+            int insertcount;
+            insertcount = qAknowledgeService.insertKnowledge(KBID,datas);
+            return Result.success("知识导入成功",insertcount);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.fail(40208,"批量导入文件失败");
+        }
     }
 
     @GetMapping("/getKnowledge")

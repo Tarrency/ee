@@ -19,7 +19,7 @@ public class KnowledgeInfo {
 
     public KnowledgeInfo(){};
 
-    public KnowledgeInfo(Integer KBID, KnowledgeInfo knowledge){
+    public KnowledgeInfo(Integer KBID, KnowledgeGet knowledge){
         this.baseId = KBID;
         this.question = knowledge.question;
         this.answer = knowledge.answer;

@@ -76,11 +76,12 @@
         </where>
     </sql>
 
-    <insert id="insertBatch"  >
+    <insert id="insertBatch">
         insert into knowledge_info(Id,base_id,question,answer,type,update_time)
+        values 
         <foreach collection="list" item="item" index="index" separator=",">
-            (DEFAULT , #{item.Id,jdbcType=INTEGER}, #{item.baseId,jdbcType=INTEGER},#{item.question,jdbcType=VARCHAR},
-            #{item.answer,jdbcType=TIMESTAMP},#{item.type,jdbcType=TIMESTAMP},#{item.knowledgeUpdateTime,jdbcType=TIMESTAMP})
+        (DEFAULT ,#{item.baseId,jdbcType=INTEGER},#{item.question,jdbcType=VARCHAR},
+            #{item.answer,jdbcType=VARCHAR},#{item.type,jdbcType=VARCHAR},#{item.knowledgeUpdateTime,jdbcType=TIMESTAMP})
         </foreach>
     </insert>
 

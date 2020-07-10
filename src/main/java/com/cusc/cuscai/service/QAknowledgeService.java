@@ -5,6 +5,7 @@ import com.cusc.cuscai.dao.QAKnowledgeBaseDao;
 import com.cusc.cuscai.entity.bo.KnowledgeBaseBO;
 import com.cusc.cuscai.entity.bo.KnowledgeInfoBO;
 import com.cusc.cuscai.entity.model.KnowledgeBase;
+import com.cusc.cuscai.entity.model.KnowledgeGet;
 import com.cusc.cuscai.entity.model.KnowledgeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,9 @@ public class QAknowledgeService {
         qaKnowledgeBaseDao.saveKB(newkb);
     }
 
-    public int insertKnowledge(Integer KBID,List<KnowledgeInfo> knowledges){
+    public int insertKnowledge(Integer KBID,List<KnowledgeGet> knowledges){
         List<KnowledgeInfo> knowledgeList = new ArrayList<KnowledgeInfo>();
-        for(KnowledgeInfo knowledgeStr:knowledges){
+        for(KnowledgeGet knowledgeStr:knowledges){
             KnowledgeInfo knowledge = new KnowledgeInfo(KBID,knowledgeStr);
             knowledgeList.add(knowledge);
         }
