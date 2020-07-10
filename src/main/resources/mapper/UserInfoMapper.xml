@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cusc.cuscai.mapper.UserInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.cusc.cuscai.model.UserInfo" >
-    <id column="user_id" property="userId" jdbcType="BIGINT" />
+  <resultMap id="BaseResultMap" type="com.cusc.cuscai.entity.model.UserInfo" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_account" property="userAccount" jdbcType="VARCHAR" />
     <result column="user_createdate" property="userCreatedate" jdbcType="TIMESTAMP" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="user_password" property="userPassword" jdbcType="VARCHAR" />
     <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
     <result column="user_mail" property="userMail" jdbcType="VARCHAR" />
+    <result column="user_image" property="userImage" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="BOResultMap" type="com.cusc.cuscai.bo.UserInfoBO" extends="BaseResultMap" />
+  <resultMap id="BOResultMap" type="com.cusc.cuscai.entity.bo.UserInfoBO" extends="BaseResultMap" />
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -70,9 +71,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, user_account, user_createdate, user_name, user_password, user_phone, user_mail
+    user_id, user_account, user_createdate, user_name, user_password, user_phone, user_mail, 
+    user_image
   </sql>
-  <select id="selectByExample" parameterType="com.cusc.cuscai.model.UserInfoExample" resultMap="BOResultMap" >
+  <select id="selectByExample" parameterType="com.cusc.cuscai.entity.model.UserInfoExample" resultMap="BOResultMap" >
     select
     <if test="distinct" >
       distinct
@@ -89,31 +91,31 @@
       limit ${limit}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BOResultMap" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BOResultMap" >
     select 
     <include refid="Base_Column_List" />
     from user_info
-    where user_id = #{userId,jdbcType=BIGINT}
+    where user_id = #{userId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from user_info
-    where user_id = #{userId,jdbcType=BIGINT}
+    where user_id = #{userId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.cusc.cuscai.model.UserInfoExample" >
+  <delete id="deleteByExample" parameterType="com.cusc.cuscai.entity.model.UserInfoExample" >
     delete from user_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cusc.cuscai.model.UserInfo" >
+  <insert id="insert" parameterType="com.cusc.cuscai.entity.model.UserInfo" >
     insert into user_info (user_id, user_account, user_createdate, 
       user_name, user_password, user_phone, 
-      user_mail)
-    values (#{userId,jdbcType=BIGINT}, #{userAccount,jdbcType=VARCHAR}, #{userCreatedate,jdbcType=TIMESTAMP}, 
+      user_mail, user_image)
+    values (#{userId,jdbcType=INTEGER}, #{userAccount,jdbcType=VARCHAR}, #{userCreatedate,jdbcType=TIMESTAMP}, 
       #{userName,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, 
-      #{userMail,jdbcType=VARCHAR})
+      #{userMail,jdbcType=VARCHAR}, #{userImage,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.cusc.cuscai.model.UserInfo" >
+  <insert id="insertSelective" parameterType="com.cusc.cuscai.entity.model.UserInfo" >
     insert into user_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
@@ -137,10 +139,13 @@
       <if test="userMail != null" >
         user_mail,
       </if>
+      <if test="userImage != null" >
+        user_image,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
-        #{userId,jdbcType=BIGINT},
+        #{userId,jdbcType=INTEGER},
       </if>
       <if test="userAccount != null" >
         #{userAccount,jdbcType=VARCHAR},
@@ -160,9 +165,12 @@
       <if test="userMail != null" >
         #{userMail,jdbcType=VARCHAR},
       </if>
+      <if test="userImage != null" >
+        #{userImage,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.cusc.cuscai.model.UserInfoExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.cusc.cuscai.entity.model.UserInfoExample" resultType="java.lang.Integer" >
     select count(*) from user_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -172,7 +180,7 @@
     update user_info
     <set >
       <if test="record.userId != null" >
-        user_id = #{record.userId,jdbcType=BIGINT},
+        user_id = #{record.userId,jdbcType=INTEGER},
       </if>
       <if test="record.userAccount != null" >
         user_account = #{record.userAccount,jdbcType=VARCHAR},
@@ -192,6 +200,9 @@
       <if test="record.userMail != null" >
         user_mail = #{record.userMail,jdbcType=VARCHAR},
       </if>
+      <if test="record.userImage != null" >
+        user_image = #{record.userImage,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -199,18 +210,19 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update user_info
-    set user_id = #{record.userId,jdbcType=BIGINT},
+    set user_id = #{record.userId,jdbcType=INTEGER},
       user_account = #{record.userAccount,jdbcType=VARCHAR},
       user_createdate = #{record.userCreatedate,jdbcType=TIMESTAMP},
       user_name = #{record.userName,jdbcType=VARCHAR},
       user_password = #{record.userPassword,jdbcType=VARCHAR},
       user_phone = #{record.userPhone,jdbcType=VARCHAR},
-      user_mail = #{record.userMail,jdbcType=VARCHAR}
+      user_mail = #{record.userMail,jdbcType=VARCHAR},
+      user_image = #{record.userImage,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cusc.cuscai.model.UserInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.cusc.cuscai.entity.model.UserInfo" >
     update user_info
     <set >
       <if test="userAccount != null" >
@@ -231,17 +243,21 @@
       <if test="userMail != null" >
         user_mail = #{userMail,jdbcType=VARCHAR},
       </if>
+      <if test="userImage != null" >
+        user_image = #{userImage,jdbcType=VARCHAR},
+      </if>
     </set>
-    where user_id = #{userId,jdbcType=BIGINT}
+    where user_id = #{userId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cusc.cuscai.model.UserInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.cusc.cuscai.entity.model.UserInfo" >
     update user_info
     set user_account = #{userAccount,jdbcType=VARCHAR},
       user_createdate = #{userCreatedate,jdbcType=TIMESTAMP},
       user_name = #{userName,jdbcType=VARCHAR},
       user_password = #{userPassword,jdbcType=VARCHAR},
       user_phone = #{userPhone,jdbcType=VARCHAR},
-      user_mail = #{userMail,jdbcType=VARCHAR}
-    where user_id = #{userId,jdbcType=BIGINT}
+      user_mail = #{userMail,jdbcType=VARCHAR},
+      user_image = #{userImage,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
   </update>
 </mapper>
