@@ -5,7 +5,7 @@ import org.noodle.base.BaseModel;
 
 public class UserInfo extends BaseModel {
     /** 主键 **/
-    private Long userId;
+    private Integer userId;
 
     /** 账号id **/
     private String userAccount;
@@ -25,11 +25,14 @@ public class UserInfo extends BaseModel {
     /** 电子邮箱 **/
     private String userMail;
 
-    public Long getUserId() {
+    /** 头像 **/
+    private String userImage;
+
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -79,5 +82,13 @@ public class UserInfo extends BaseModel {
 
     public void setUserMail(String userMail) {
         this.userMail = userMail;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 }

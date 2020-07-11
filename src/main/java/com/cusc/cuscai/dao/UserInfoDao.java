@@ -12,11 +12,51 @@ import com.google.common.collect.Lists;
 
 import com.cusc.cuscai.mapper.UserInfoMapper;
 
+
 @Repository
 public class UserInfoDao {
 
 	@Autowired
 	private UserInfoMapper mapper;
+
+	/**
+	 * 根据用户账户返回用户所有的信息
+	 * @param userAccount 用户账户
+	 * @return 用户所有的信息
+	 */
+	public UserInfoBO getUserInfo(String userAccount){
+		UserInfoExample example = new UserInfoExample();
+		example.createCriteria().andUserAccountEqualTo(userAccount);
+		List<UserInfoBO> temp = mapper.selectByExample(example);
+		UserInfoBO userinfo = new UserInfoBO();
+		userinfo.setUserId(-1);
+		if(temp.size() == 0)
+			return userinfo;
+		userinfo = temp.get(0);
+		return userinfo;
+	}
+
+	/**
+	 * 修改用户信息
+	 * @param userAccount 用户账号id
+	 * @param userName 用户名
+	 * @param userPassword 用户密码
+	 * @param userPhone 用户手机
+	 * @param userMail 用户邮箱
+	 */
+	public void modifyUser(String userAccount, String userName,
+						   String userPassword, String userPhone,
+						   String userMail)
+	{
+		UserInfoExample example = new UserInfoExample();
+		example.createCriteria().andUserAccountEqualTo(userAccount);
+		UserInfoBO userinfo = mapper.selectByExample(example).get(0);
+		userinfo.setUserName(userName);
+		userinfo.setUserPassword(userPassword);
+		userinfo.setUserPhone(userPhone);
+		userinfo.setUserMail(userMail);
+		update(userinfo);
+	}
 
    //////////////////////////////////////////////////////
    ///** generate code begin 此标记中间不要添加自定义代码 **///
@@ -25,7 +65,7 @@ public class UserInfoDao {
 		UserInfoExample example=new UserInfoExample();
 		return mapper.selectByExample(example);
 	}
-	List<UserInfoBO> findAll(Iterable<Long> ids){
+	List<UserInfoBO> findAll(Iterable<Integer> ids){
 		UserInfoExample example=new UserInfoExample();
 		example.createCriteria().andUserIdIn(Lists.newArrayList(ids));
 		return mapper.selectByExample(example);
@@ -58,11 +98,11 @@ public class UserInfoDao {
 		mapper.updateByPrimaryKeySelective(record);
 	}
 	
-	public UserInfoBO findOne(Long id){
+	public UserInfoBO findOne(Integer id){
 		return mapper.selectByPrimaryKey(id);
 	}
 
-	public boolean exists(Long id){
+	public boolean exists(Integer id){
 		if(id == null){
 			return false;
 		}
@@ -71,11 +111,11 @@ public class UserInfoDao {
 		return mapper.countByExample(example) > 0;
 	}
 	
-	 public void delete(Long id){
+	 public void delete(Integer id){
 		 mapper.deleteByPrimaryKey(id);
 	 }
 	 
-	 public void remove(Long id){
+	 public void remove(Integer id){
 		 mapper.deleteByPrimaryKey(id);
 	 }
 
@@ -84,14 +124,14 @@ public class UserInfoDao {
 	}
 
 	public void delete(Iterable<UserInfo> entities){
-		List<Long> ids=Lists.newArrayList();
+		List<Integer> ids=Lists.newArrayList();
 		for (UserInfo  entity: entities) {
 			ids.add(entity.getUserId());
 		}
 		deleteByIds(ids);
 	}
 	
-	public void deleteByIds(Iterable<Long> ids){
+	public void deleteByIds(Iterable<Integer> ids){
 		UserInfoExample example=new UserInfoExample();
 		example.createCriteria().andUserIdIn(Lists.newArrayList(ids));
 		 mapper.deleteByExample(example);

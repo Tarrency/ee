@@ -1,10 +1,11 @@
 package com.cusc.cuscai.mapper;
 
 
+import java.util.List;
+
 import com.cusc.cuscai.entity.bo.UserInfoBO;
 import com.cusc.cuscai.entity.model.UserInfo;
 import com.cusc.cuscai.entity.model.UserInfoExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserInfoMapper {
@@ -12,7 +13,7 @@ public interface UserInfoMapper {
 
     int deleteByExample(UserInfoExample example);
 
-    int deleteByPrimaryKey(Long userId);
+    int deleteByPrimaryKey(Integer userId);
 
     int insert(UserInfo record);
 
@@ -20,7 +21,7 @@ public interface UserInfoMapper {
 
     List<UserInfoBO> selectByExample(UserInfoExample example);
 
-    UserInfoBO selectByPrimaryKey(Long userId);
+    UserInfoBO selectByPrimaryKey(Integer userId);
 
     int updateByExampleSelective(@Param("record") UserInfo record, @Param("example") UserInfoExample example);
 

@@ -137,52 +137,52 @@ public class UserInfoExample extends AbstractExample<UserInfoBO> {
             return (Criteria) this;
         }
 
-        public Criteria andUserIdEqualTo(Long value) {
+        public Criteria andUserIdEqualTo(Integer value) {
             addCriterion("user_id =", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotEqualTo(Long value) {
+        public Criteria andUserIdNotEqualTo(Integer value) {
             addCriterion("user_id <>", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdGreaterThan(Long value) {
+        public Criteria andUserIdGreaterThan(Integer value) {
             addCriterion("user_id >", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andUserIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("user_id >=", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdLessThan(Long value) {
+        public Criteria andUserIdLessThan(Integer value) {
             addCriterion("user_id <", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdLessThanOrEqualTo(Long value) {
+        public Criteria andUserIdLessThanOrEqualTo(Integer value) {
             addCriterion("user_id <=", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdIn(List<Long> values) {
+        public Criteria andUserIdIn(List<Integer> values) {
             addCriterion("user_id in", values, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotIn(List<Long> values) {
+        public Criteria andUserIdNotIn(List<Integer> values) {
             addCriterion("user_id not in", values, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdBetween(Long value1, Long value2) {
+        public Criteria andUserIdBetween(Integer value1, Integer value2) {
             addCriterion("user_id between", value1, value2, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUserIdNotBetween(Long value1, Long value2) {
+        public Criteria andUserIdNotBetween(Integer value1, Integer value2) {
             addCriterion("user_id not between", value1, value2, "userId");
             return (Criteria) this;
         }
@@ -594,6 +594,76 @@ public class UserInfoExample extends AbstractExample<UserInfoBO> {
 
         public Criteria andUserMailNotBetween(String value1, String value2) {
             addCriterion("user_mail not between", value1, value2, "userMail");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageIsNull() {
+            addCriterion("user_image is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageIsNotNull() {
+            addCriterion("user_image is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageEqualTo(String value) {
+            addCriterion("user_image =", value, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageNotEqualTo(String value) {
+            addCriterion("user_image <>", value, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageGreaterThan(String value) {
+            addCriterion("user_image >", value, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageGreaterThanOrEqualTo(String value) {
+            addCriterion("user_image >=", value, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageLessThan(String value) {
+            addCriterion("user_image <", value, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageLessThanOrEqualTo(String value) {
+            addCriterion("user_image <=", value, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageLike(String value) {
+            addCriterion("user_image like", value, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageNotLike(String value) {
+            addCriterion("user_image not like", value, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageIn(List<String> values) {
+            addCriterion("user_image in", values, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageNotIn(List<String> values) {
+            addCriterion("user_image not in", values, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageBetween(String value1, String value2) {
+            addCriterion("user_image between", value1, value2, "userImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserImageNotBetween(String value1, String value2) {
+            addCriterion("user_image not between", value1, value2, "userImage");
             return (Criteria) this;
         }
     }
