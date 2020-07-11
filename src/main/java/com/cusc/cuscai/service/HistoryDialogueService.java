@@ -52,7 +52,9 @@ public class HistoryDialogueService {
                                                 String userId,
                                                 Long agentId,
                                                 String message,
-                                                Short sender){
+                                                Short sender,
+                                                Boolean ifDeliverd,
+                                                String other){
         HistoryDialogueInfo historyDialogueInfo = new HistoryDialogueInfo();
 
         historyDialogueInfo.setSessionId(sessionId);
@@ -61,6 +63,8 @@ public class HistoryDialogueService {
         historyDialogueInfo.setSender(sender);
         historyDialogueInfo.setMessage(message);
         historyDialogueInfo.setDate(new Date());
+        historyDialogueInfo.setIfDeliverd(ifDeliverd);
+        historyDialogueInfo.setOther(other);
 
         try {
             return historyDialogueInfoDao.save(historyDialogueInfo);

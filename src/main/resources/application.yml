@@ -28,7 +28,7 @@ mybatis:
 
 remote-ai:
   qaai:
-    url: http://10.108.211.93:7662
+    url: http://39.102.46.180:7662
   kgai:
     url: http://10.108.217.31:5000
 

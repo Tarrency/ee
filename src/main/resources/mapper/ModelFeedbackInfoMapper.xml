@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cusc.cuscai.mapper.ModelFeedbackInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cusc.cuscai.entity.model.ModelFeedbackInfo" >
+    <id column="feedback_id" property="feedbackId" jdbcType="BIGINT" />
+    <result column="model_type" property="modelType" jdbcType="INTEGER" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="predict" property="predict" jdbcType="INTEGER" />
+    <result column="feedback_update_time" property="feedbackUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="BOResultMap" type="com.cusc.cuscai.entity.bo.ModelFeedbackInfoBO" extends="BaseResultMap" />
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    feedback_id, model_type, message, answer, predict, feedback_update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.cusc.cuscai.entity.model.ModelFeedbackInfoExample" resultMap="BOResultMap" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from model_feedback_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      limit ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BOResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from model_feedback_info
+    where feedback_id = #{feedbackId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from model_feedback_info
+    where feedback_id = #{feedbackId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cusc.cuscai.entity.model.ModelFeedbackInfoExample" >
+    delete from model_feedback_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cusc.cuscai.entity.model.ModelFeedbackInfo" >
+    insert into model_feedback_info (feedback_id, model_type, message, 
+      answer, predict, feedback_update_time
+      )
+    values (#{feedbackId,jdbcType=BIGINT}, #{modelType,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}, 
+      #{answer,jdbcType=VARCHAR}, #{predict,jdbcType=INTEGER}, #{feedbackUpdateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cusc.cuscai.entity.model.ModelFeedbackInfo" useGeneratedKeys="true" keyProperty="feedbackId">
+    insert into model_feedback_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="feedbackId != null" >
+        feedback_id,
+      </if>
+      <if test="modelType != null" >
+        model_type,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="predict != null" >
+        predict,
+      </if>
+      <if test="feedbackUpdateTime != null" >
+        feedback_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="feedbackId != null" >
+        #{feedbackId,jdbcType=BIGINT},
+      </if>
+      <if test="modelType != null" >
+        #{modelType,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="predict != null" >
+        #{predict,jdbcType=INTEGER},
+      </if>
+      <if test="feedbackUpdateTime != null" >
+        #{feedbackUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cusc.cuscai.entity.model.ModelFeedbackInfoExample" resultType="java.lang.Integer" >
+    select count(*) from model_feedback_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update model_feedback_info
+    <set >
+      <if test="record.feedbackId != null" >
+        feedback_id = #{record.feedbackId,jdbcType=BIGINT},
+      </if>
+      <if test="record.modelType != null" >
+        model_type = #{record.modelType,jdbcType=INTEGER},
+      </if>
+      <if test="record.message != null" >
+        message = #{record.message,jdbcType=VARCHAR},
+      </if>
+      <if test="record.answer != null" >
+        answer = #{record.answer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.predict != null" >
+        predict = #{record.predict,jdbcType=INTEGER},
+      </if>
+      <if test="record.feedbackUpdateTime != null" >
+        feedback_update_time = #{record.feedbackUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update model_feedback_info
+    set feedback_id = #{record.feedbackId,jdbcType=BIGINT},
+      model_type = #{record.modelType,jdbcType=INTEGER},
+      message = #{record.message,jdbcType=VARCHAR},
+      answer = #{record.answer,jdbcType=VARCHAR},
+      predict = #{record.predict,jdbcType=INTEGER},
+      feedback_update_time = #{record.feedbackUpdateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cusc.cuscai.entity.model.ModelFeedbackInfo" >
+    update model_feedback_info
+    <set >
+      <if test="modelType != null" >
+        model_type = #{modelType,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="predict != null" >
+        predict = #{predict,jdbcType=INTEGER},
+      </if>
+      <if test="feedbackUpdateTime != null" >
+        feedback_update_time = #{feedbackUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where feedback_id = #{feedbackId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cusc.cuscai.entity.model.ModelFeedbackInfo" >
+    update model_feedback_info
+    set model_type = #{modelType,jdbcType=INTEGER},
+      message = #{message,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      predict = #{predict,jdbcType=INTEGER},
+      feedback_update_time = #{feedbackUpdateTime,jdbcType=TIMESTAMP}
+    where feedback_id = #{feedbackId,jdbcType=BIGINT}
+  </update>
+</mapper>
