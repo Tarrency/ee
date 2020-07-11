@@ -29,9 +29,9 @@ public class UserController {
             if(userinfo.getUserId()==-1)
                 throw new Exception("未找到该用户");
         }catch (Exception e) {
-            return Result.fail(40600, e.getMessage());
+            return Result.fail(40110, e.getMessage());
         }
-        return Result.success(20600, "查询User信息成功", userinfo);
+        return Result.success(20110, "查询User信息成功", userinfo);
     }
 
     @PutMapping("/change")
@@ -47,8 +47,8 @@ public class UserController {
         try {
             userService.modifyUser(userAccount,userName,userPassword,userPhone,userMail);
         } catch (Exception e) {
-            return Result.fail(40603, e.getMessage());
+            return Result.fail(40100, e.getMessage());
         }
-        return Result.success(20603, "修改user信息成功", userAccount);
+        return Result.success(20100, "修改user信息成功", userAccount);
     }
 }

@@ -1,6 +1,8 @@
 package com.cusc.cuscai.entity.model;
 
 import java.util.Date;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import org.noodle.base.BaseModel;
 
 public class UserInfo extends BaseModel {
@@ -11,6 +13,7 @@ public class UserInfo extends BaseModel {
     private String userAccount;
 
     /** 创建日期 **/
+    @JSONField(format="yyyy-MM-dd")
     private Date userCreatedate;
 
     /** 用户名称 **/
