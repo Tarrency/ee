@@ -248,16 +248,11 @@ public class AIIEController {
      *
      * 获取目前现有的模型，用于agent绑定模型
      *
-     * @param agentId agentId
      * @return Result
      */
     @ApiOperation(value = "获取目前现有的模型（agent用）", notes = "获取目前现有的模型")
     @PostMapping("/getModels")
-    public Result getModels(@RequestParam("agentId") @ApiParam(value = "agentId", required = true) Integer agentId) {
-        if (!agentService.isAgentExist(agentId)) {
-            return Result.fail(41100, String.format("Agent : %d 不存在", agentId));
-        }
-
+    public Result getModels() {
         JSONArray jsonArray = new JSONArray();
 
         try {
