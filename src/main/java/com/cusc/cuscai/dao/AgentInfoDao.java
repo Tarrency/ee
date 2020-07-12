@@ -98,6 +98,7 @@ public class AgentInfoDao {
             AgentInfo agentInfo = new AgentInfo();
             agentInfo.setAdminId(adminID);
             agentInfo.setAgentName(agentName);
+            agentInfo.setModelType(modelType);
             agentInfo.setAgentCreateTime(new Date());
             agentInfo.setAgentUpdateTime(new Date());
             agentInfo.setAgentStatus(1);
@@ -132,6 +133,7 @@ public class AgentInfoDao {
             agentInfo.setAgentId(agentID);
             agentInfo.setAdminId(adminID);
             agentInfo.setAgentName(agentName);
+            agentInfo.setModelType(modelType);
             agentInfo.setAgentUpdateTime(new Date());
             save(agentInfo);
 
