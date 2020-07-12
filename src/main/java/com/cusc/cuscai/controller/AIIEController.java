@@ -33,6 +33,7 @@ import io.swagger.annotations.ApiParam;
  * 主要功能：
  * * 模型引擎交互接口
  * * 日志记录
+ * * 模型反馈记录
  */
 @Api(tags = "AI交互引擎相关接口")
 @RestController
@@ -57,7 +58,7 @@ public class AIIEController {
     @Value("${remote-ai.kgai.url}")
     private String kgaiUrl;
 
-    /////////////// User(app侧）调用接口 ///////////////
+    /////////////// user(app侧）相关调用接口 ///////////////
 
     /**
      *
@@ -242,40 +243,44 @@ public class AIIEController {
 
 
 
-    /////////////// 模型引擎交互接口 ////////////////////
+    /////////////// agent相关接口 ////////////////////
 
     /**
-     *
      * 获取目前现有的模型，用于agent绑定模型
      *
+     * @param modelType 返回指定类型的模型，-1:全部，0:QA模型；1:KG模型；2:MR模型
      * @return Result
      */
     @ApiOperation(value = "获取目前现有的模型（agent用）", notes = "获取目前现有的模型")
     @PostMapping("/getModels")
-    public Result getModels() {
+    public Result getModels(@RequestParam("modelType") @ApiParam(value = "modelType", required = true, allowableValues="-1,0,1,2") Integer modelType) {
         JSONArray jsonArray = new JSONArray();
 
         try {
             // 获取QA模型
-            JSONObject response = aiieService.getResponse(qaaiUrl, "/qaai/getModels");
-            if (response != null) {
-                System.out.println(response);
-                if (response.containsKey("retData")) {
-                    JSONArray res = response.getJSONArray("retData");
-                    if (res != null) {
-                        jsonArray.addAll(res);
+            if (modelType == 0 || modelType == -1){
+                JSONObject response = aiieService.getResponse(qaaiUrl, "/qaai/getModels");
+                if (response != null) {
+                    System.out.println(response);
+                    if (response.containsKey("retData")) {
+                        JSONArray res = response.getJSONArray("retData");
+                        if (res != null) {
+                            jsonArray.addAll(res);
+                        }
                     }
                 }
             }
 
-            // 获取KG模型
-            response = aiieService.getResponse(kgaiUrl, "/kgai/getModels");
-            if (response != null) {
-                System.out.println(response);
-                if (response.containsKey("retData")) {
-                    JSONArray res = response.getJSONArray("retData");
-                    if (res != null) {
-                        jsonArray.addAll(res);
+            if (modelType == 1 || modelType == -1){
+                // 获取KG模型
+                JSONObject response = aiieService.getResponse(kgaiUrl, "/kgai/getModels");
+                if (response != null) {
+                    System.out.println(response);
+                    if (response.containsKey("retData")) {
+                        JSONArray res = response.getJSONArray("retData");
+                        if (res != null) {
+                            jsonArray.addAll(res);
+                        }
                     }
                 }
             }
@@ -288,12 +293,13 @@ public class AIIEController {
     }
 
     /**
+     * agent测试使用接口，根据agentID判断模型类型和ids，预测问题结果
      *
      * @param agentId agentid,用于获取模型id和模型类型
      * @param userText 用户预测文本
      * @return Result
      */
-    @ApiOperation(value = "获取模型预测结果（agent测试用）", notes = "根据模型类型和ID获取模型预测结果，ID可多个，即返回多个模型综合预测结果")
+    @ApiOperation(value = "获取模型预测结果（agent测试用）", notes = "agent测试使用接口，根据agentID判断模型类型和ids，预测问题结果")
     @PostMapping("/testPredict")
     public Result testPredict(@RequestParam("agentId") @ApiParam(value = "agentId", required = true) Integer agentId,
                           @RequestParam("userText") @ApiParam(value = "userText", required = true) String userText) {
@@ -340,6 +346,41 @@ public class AIIEController {
             return Result.fail(500, "服务器出错");
         }
     }
+
+    /**
+     *
+     * agent在使用QA模型时，根据用户选择的问题id，获取问题答案返回给用户
+     *
+     * @param agentId agentId，用于判断agent是否存在，以及模型类型是否是QA模型
+     * @param qapid 问题id
+     * @return Result
+     */
+    @ApiOperation(value = "agent测试获取QA问题答案接口（agent用）",notes = "agent在使用QA模型时，根据用户选择的问题id，获取问题答案返回给用户")
+    @PostMapping("/testGetQAAnswer")
+    public Result testGetQAAnswer(@RequestParam("agentId") @ApiParam(value = "agentId", required = true) Integer agentId,
+                                  @RequestParam("qapid") @ApiParam(value = "qapid", required = true) String qapid){
+        if (!agentService.isAgentExist(agentId)) {
+            return Result.fail(40721, String.format("Agent : %d 不存在", agentId));
+        }
+
+        AgentModelBO agentModelBO = agentService.searchAgentModels(agentId);
+        if (agentModelBO == null){
+            return Result.fail(40721, String.format("Agent : %d 信息错误", agentId));
+        } else if(agentModelBO.getModelType() != 0){
+            return Result.fail(40721, String.format("Agent : %d 模型信息不正确", agentId));
+        } else {
+            JSONObject params = new JSONObject();
+            params.put("qapid", qapid);
+            JSONObject response = aiieService.postResponse(qaaiUrl, "/qaai/id2Answer", params);
+            if (response != null && response.containsKey("retData")
+                    && response.containsKey("retCode") && response.getIntValue("retCode") == 21200) {
+                return Result.success(20721, "获取问题答案成功", response.getString("retData"));
+            } else {
+                return Result.fail(40721, "获取问题答案成功");
+            }
+        }
+    }
+
 
     ////////////////// 日志记录相关接口 ////////////////////
 
