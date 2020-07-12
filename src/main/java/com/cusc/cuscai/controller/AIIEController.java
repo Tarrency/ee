@@ -105,7 +105,7 @@ public class AIIEController {
                 JSONObject response = aiieService.postResponse(kgaiUrl, "/kgai/predict", params);
                 if (response != null && response.containsKey("retData")
                         && response.containsKey("retCode") && response.getIntValue("retCode") == 21301) {
-                    return Result.success(20724, "问答问题成功", response.getJSONObject("retData"));
+                    return Result.success(20724, "问答问题成功", response.getJSONArray("retData"));
                 } else {
                     return Result.fail(40724, "回答问题失败");
                 }
@@ -334,7 +334,7 @@ public class AIIEController {
                 JSONObject response = aiieService.postResponse(kgaiUrl, "/kgai/predict", params);
                 if (response != null && response.containsKey("retData")
                         && response.containsKey("retCode") && response.getIntValue("retCode") == 21301) {
-                    return Result.success(21101, "问答问题成功", response.getJSONObject("retData"));
+                    return Result.success(21101, "问答问题成功", response.getJSONArray("retData"));
                 } else {
                     return Result.fail(41101, "回答问题失败");
                 }
