@@ -159,7 +159,7 @@ public class AIIEController {
 
     /**
      *
-     * 前端根据问题id，获取问题答案返回给用户
+     * 前端在使用QA模型时，根据用户选择的问题id，获取问题答案返回给用户
      *
      * @param sessionId sessionId
      * @param userId userId
@@ -167,7 +167,7 @@ public class AIIEController {
      * @param qapid 问题id
      * @return Result
      */
-    @ApiOperation(value = "前端获取QA问题答案接口（user用）",notes = "前端根据问题id，获取问题答案返回给用户")
+    @ApiOperation(value = "前端获取QA问题答案接口（user用）",notes = "前端在使用QA模型时，根据用户选择的问题id，获取问题答案返回给用户")
     @PostMapping("/getQAAnswer")
     public Result getQAAnswer(@RequestParam("sessionId") @ApiParam(value = "sessionId", required = true) String sessionId,
                               @RequestParam("userId") @ApiParam(value = "userId", required = true) String userId,
