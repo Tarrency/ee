@@ -2,6 +2,7 @@ package com.cusc.cuscai.service.kgService;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dto.GraphDTO;
+import com.cusc.cuscai.entity.bo.KGDBinfoBO;
 import com.cusc.cuscai.entity.kgEntity.Chairman;
 import com.cusc.cuscai.entity.kgEntity.Organization;
 import com.cusc.cuscai.entity.kgEntity.Person;
@@ -37,5 +38,8 @@ public interface KGServer {
 
     // 可视化用
     GraphDTO getNeibors(String name);
+
+    //查询数据库信息
+    List<KGDBinfoBO> findAll();
 
 }

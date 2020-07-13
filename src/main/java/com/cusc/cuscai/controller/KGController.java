@@ -3,6 +3,7 @@ package com.cusc.cuscai.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dto.GraphDTO;
+import com.cusc.cuscai.entity.bo.KGDBinfoBO;
 import com.cusc.cuscai.entity.kgEntity.Chairman;
 import com.cusc.cuscai.entity.kgEntity.Person;
 import com.cusc.cuscai.service.kgService.KGServer;
@@ -198,4 +199,16 @@ public class KGController {
 //        }
 //        return Result.success("批量上传成功", relations);
 //    }
+    @GetMapping("/getDBlist")
+    @ApiOperation("查询数据库列表信息")
+    public Result getList() {
+
+        List<KGDBinfoBO> dbList = new ArrayList<>();
+        try {
+            dbList = kgServer.findAll();
+        } catch (Exception e) {
+            return Result.fail(40601, e.getMessage());
+        }
+        return Result.success(20601, "查询数据库列表信息", dbList);
+    }
 }

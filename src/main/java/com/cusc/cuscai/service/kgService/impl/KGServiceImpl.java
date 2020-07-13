@@ -3,6 +3,8 @@ package com.cusc.cuscai.service.kgService.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dao.kgdao.*;
 import com.cusc.cuscai.dto.GraphDTO;
+import com.cusc.cuscai.dao.KGDBinfoDao;
+import com.cusc.cuscai.entity.bo.KGDBinfoBO;
 import com.cusc.cuscai.entity.kgEntity.*;
 import com.cusc.cuscai.exception.GlobalException;
 import com.cusc.cuscai.service.kgService.KGServer;
@@ -30,6 +32,8 @@ public class KGServiceImpl implements KGServer {
     @Autowired
     Neo4jDao neo4jDao;
 
+    @Autowired
+    KGDBinfoDao kgdbinfoDao;
     /**
      * 实体的增删改查
      */
@@ -363,5 +367,9 @@ public class KGServiceImpl implements KGServer {
         dto.setNodes(nodeMap.values().stream().collect(Collectors.toList()));
         dto.setLinks(linkMap.values().stream().collect(Collectors.toList()));
         return dto;
+    }
+    @Override
+    public List<KGDBinfoBO> findAll() {
+        return kgdbinfoDao.findAll() ;
     }
 }
