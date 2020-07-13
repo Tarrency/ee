@@ -3,9 +3,6 @@ package com.cusc.cuscai.service.kgService;
 import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.bo.KGDBinfoBO;
-import com.cusc.cuscai.entity.kgEntity.Chairman;
-import com.cusc.cuscai.entity.kgEntity.Organization;
-import com.cusc.cuscai.entity.kgEntity.Person;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -22,13 +19,13 @@ public interface KGServer {
 
     // 关系
     String addRelation(long id1, long id2, String type);
+    void deleteRelation(long id);
 
 
     // 批量
     String upload(MultipartFile file);
-//
-//    List<Person> getPersonFromFile(MultipartFile file);
-//    List<Chairman> getChairmanFromFile(MultipartFile file);
+    void getEntFromFile(MultipartFile file);
+    void getRelFromFile(MultipartFile file);
 
     // 统计
     List<String> getEntLabels();
@@ -37,7 +34,7 @@ public interface KGServer {
     List<String> getRelLabels();
 
     // 可视化用
-    GraphDTO getNeibors(String name);
+    GraphDTO paint(long id);
 
     //查询数据库信息
     List<KGDBinfoBO> findAll();
