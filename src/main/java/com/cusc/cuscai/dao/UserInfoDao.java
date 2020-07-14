@@ -9,9 +9,12 @@ import com.cusc.cuscai.entity.model.UserInfoExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.google.common.collect.Lists;
+import org.springframework.util.DigestUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.cusc.cuscai.mapper.UserInfoMapper;
-
 
 @Repository
 public class UserInfoDao {
@@ -51,10 +54,29 @@ public class UserInfoDao {
 		UserInfoExample example = new UserInfoExample();
 		example.createCriteria().andUserAccountEqualTo(userAccount);
 		UserInfoBO userinfo = mapper.selectByExample(example).get(0);
-		userinfo.setUserName(userName);
-		userinfo.setUserPassword(userPassword);
-		userinfo.setUserPhone(userPhone);
-		userinfo.setUserMail(userMail);
+		if (userName == ""){
+
+		}else if (userName != null){
+			userinfo.setUserName(userName);
+		}
+		if (userPassword == ""){
+
+		}else if (userPassword != null){
+			String md5Password = DigestUtils.md5DigestAsHex(userPassword.getBytes());
+			userinfo.setUserPassword(md5Password);
+		}
+
+		if (userPhone == ""){
+
+		}else if (userPhone != null){
+			userinfo.setUserPhone(userPhone);
+		}
+
+		if (userMail == ""){
+
+		}else if (userMail != null){
+			userinfo.setUserMail(userMail);
+		}
 		update(userinfo);
 	}
 

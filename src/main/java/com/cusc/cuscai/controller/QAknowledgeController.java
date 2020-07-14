@@ -43,10 +43,16 @@ public class QAknowledgeController {
     @ResponseBody
     @ApiOperation("导入知识")
     public Result addKnowledge(@RequestParam("KBID") @ApiParam(value = "知识库id", required = true) Integer KBID,
-                               @RequestParam("knowledge")  @ApiParam(value = "导入库中的知识", required = true) List<KnowledgeGet> knowledge){
+                               @RequestParam("knowledge")  @ApiParam(value = "导入库中的知识", required = true) String knowledgeStream){
         int insertcount;
+        List<KnowledgeGet> knowledges = new ArrayList<>();
+        KnowledgeGet k = new KnowledgeGet();
+        k.setQuestion(knowledgeStream.split(",")[0]);
+        k.setAnswer(knowledgeStream.split(",")[1]);
+        k.setType(knowledgeStream.split(",")[2]);
+        knowledges.add(k);
         try {
-            insertcount = qAknowledgeService.insertKnowledge(KBID,knowledge);
+            insertcount = qAknowledgeService.insertKnowledge(KBID,knowledges);
         }catch (Exception e){
             return Result.fail(40201, e.getMessage());
         }
