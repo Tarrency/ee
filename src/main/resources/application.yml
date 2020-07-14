@@ -30,7 +30,7 @@ remote-ai:
   qaai:
     url: http://39.102.46.180:7662
   kgai:
-    url: http://10.108.217.31:5000
+    url: http://10.108.217.31:7663
 
 neo4j:
   url: bolt://39.102.46.180:7687  # bolt://39.102.46.180:7687 # bolt://localhost:7687
