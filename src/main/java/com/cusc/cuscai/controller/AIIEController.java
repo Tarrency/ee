@@ -191,7 +191,7 @@ public class AIIEController {
                     && response.containsKey("retCode") && response.getIntValue("retCode") == 21200) {
                 return Result.success(20721, "获取问题答案成功", response.getString("retData"));
             } else {
-                return Result.fail(40721, "获取问题答案成功");
+                return Result.fail(40721, "获取问题答案失败");
             }
         }
     }
@@ -376,7 +376,7 @@ public class AIIEController {
                     && response.containsKey("retCode") && response.getIntValue("retCode") == 21200) {
                 return Result.success(20721, "获取问题答案成功", response.getString("retData"));
             } else {
-                return Result.fail(40721, "获取问题答案成功");
+                return Result.fail(40721, "获取问题答案失败");
             }
         }
     }
@@ -415,5 +415,23 @@ public class AIIEController {
         }
     }
 
-
+    /////////////////////// 热点问题用 /////////////////////////
+    @ApiOperation(value = "查询问题答案")
+    @PostMapping("/id2QAAnswer")
+    public Result id2QAAnswer(@RequestParam("qapid") @ApiParam(value = "qapid", required = true) String qapid){
+        try {
+            JSONObject params = new JSONObject();
+            params.put("qapid", qapid);
+            JSONObject response = aiieService.postResponse(qaaiUrl, "/qaai/id2Answer", params);
+            if (response != null && response.containsKey("retData")
+                    && response.containsKey("retCode") && response.getIntValue("retCode") == 21200) {
+                return Result.success(200, "查询问题答案成功", response.getString("retData"));
+            } else {
+                return Result.fail(400, "查询问题答案失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.fail(500, "服务器出错");
+        }
+    }
 }
