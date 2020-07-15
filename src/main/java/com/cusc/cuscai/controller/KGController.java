@@ -193,6 +193,15 @@ public class KGController {
         }
         return Result.success(20601, "查询数据库列表信息", dbList);
     }
-
+    @PostMapping("/addDBInfo")
+    @ApiOperation("添加数据库信息")
+    public Result newAgent(
+            @RequestParam("dbname") @ApiParam(value = "数据库名称", required = true) String dbname,
+            @RequestParam("entities") @ApiParam(value = "实体数量", required = true) int entities,
+            @RequestParam("relationships") @ApiParam(value = "关系数量", required = true) int relationships
+    ) {
+           kgServer.addDBInfo(dbname, entities, relationships);
+       return Result.success(20602, "添加数据成功",null);
+    }
 
 }
