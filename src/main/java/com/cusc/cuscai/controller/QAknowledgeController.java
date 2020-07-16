@@ -10,6 +10,7 @@ import com.cusc.cuscai.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.nutz.lang.random.R;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -121,6 +122,19 @@ public class QAknowledgeController {
         return Result.success("知识查询成功",res);
     }
 
+    @GetMapping("/getKnowledgeByID")
+    @ResponseBody
+    @ApiOperation("通过知识id查询知识")
+    public Result getKnowledgeByID(@RequestParam("knowledgeId")  @ApiParam(value = "知识ID", required = true) int knowledgeId){
+        List<KnowledgeInfoBO> res = new ArrayList<KnowledgeInfoBO>();
+        try{
+            res = qAknowledgeService.getKnowledgeById(knowledgeId);
+        }catch (Exception e){
+            System.out.println(e);
+            return Result.fail(40209,e.getMessage());
+        }
+        return Result.success("知识查询成功",res);
+    }
 
     @PostMapping("/updateKnowledge")
     @ResponseBody
@@ -163,5 +177,7 @@ public class QAknowledgeController {
         }
         return Result.success("成功删除知识");
     }
+
+
 
 }

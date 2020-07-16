@@ -75,6 +75,12 @@ public class QAknowledgeService {
         return resdata;
     }
 
+    public List<KnowledgeInfoBO> getKnowledgeById(int knowledgeId){
+        List<KnowledgeInfoBO> resdata = new ArrayList<KnowledgeInfoBO>();
+        resdata = qaKnowledgeDao.findByKnowledgeId(knowledgeId);
+        return resdata;
+    }
+
     public void deleteKnowledge(List<Integer> knowledgeIds) {
         qaKnowledgeDao.deleteByKIIds(knowledgeIds);
     }
