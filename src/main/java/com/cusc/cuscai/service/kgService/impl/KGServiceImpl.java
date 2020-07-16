@@ -5,6 +5,7 @@ import com.cusc.cuscai.dao.KGDBinfoDao;
 import com.cusc.cuscai.dao.kgdao.*;
 import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.bo.KGDBinfoBO;
+import com.cusc.cuscai.entity.model.KGDBinfo;
 import com.cusc.cuscai.exception.GlobalException;
 import com.cusc.cuscai.service.kgService.KGServer;
 import com.cusc.cuscai.util.POIUtil;
@@ -22,9 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.lang.String.*;
 
 @Service
 public class KGServiceImpl implements KGServer {
@@ -431,5 +429,14 @@ public class KGServiceImpl implements KGServer {
     @Override
     public List<KGDBinfoBO> findAll() {
         return kgdbinfoDao.findAll() ;
+    }
+
+    @Override
+    public KGDBinfo addDBInfo(String dbname, Integer entities, Integer relationships) {
+        KGDBinfo kgdBinfo = new KGDBinfo();
+        kgdBinfo.setDbname(dbname);
+        kgdBinfo.setEntities(entities);
+        kgdBinfo.setRelationships(relationships);
+        return kgdbinfoDao.save(kgdBinfo);
     }
 }

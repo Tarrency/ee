@@ -3,6 +3,7 @@ package com.cusc.cuscai.service.kgService;
 import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.bo.KGDBinfoBO;
+import com.cusc.cuscai.entity.model.KGDBinfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -38,5 +39,8 @@ public interface KGServer {
 
     //查询数据库信息
     List<KGDBinfoBO> findAll();
+
+    //添加数据库信息
+    KGDBinfo addDBInfo(String dbname, Integer entities, Integer relationships);
 
 }
