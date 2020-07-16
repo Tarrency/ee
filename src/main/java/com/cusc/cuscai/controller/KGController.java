@@ -286,9 +286,9 @@ public class KGController {
         try {
             dbList = kgServer.findAll();
         } catch (Exception e) {
-            return Result.fail(40601, e.getMessage());
+            return Result.fail(40411, e.getMessage());
         }
-        return Result.success(20601, "查询数据库列表信息", dbList);
+        return Result.success(20410, "查询数据库列表信息", dbList);
     }
     @PostMapping("/addDBInfo")
     @ApiOperation("添加数据库信息")
@@ -297,8 +297,13 @@ public class KGController {
             @RequestParam("entities") @ApiParam(value = "实体数量", required = true) int entities,
             @RequestParam("relationships") @ApiParam(value = "关系数量", required = true) int relationships
     ) {
-           kgServer.addDBInfo(dbname, entities, relationships);
-       return Result.success(20602, "添加数据成功",null);
+        try {
+            kgServer.addDBInfo(dbname, entities, relationships);
+        } catch (Exception e) {
+            return Result.fail(40412, e.getMessage());
+        }
+
+       return Result.success(20412, "添加数据成功",null);
     }
 
 }
