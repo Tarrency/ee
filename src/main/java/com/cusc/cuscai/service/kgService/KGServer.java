@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cusc.cuscai.dto.GraphDTO;
 import com.cusc.cuscai.entity.bo.KGDBinfoBO;
 import com.cusc.cuscai.entity.model.KGDBinfo;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -36,6 +37,10 @@ public interface KGServer {
 
     // 可视化用
     GraphDTO paint(long id);
+
+    // 导出实体与关系文件
+    String getEntityFile();
+    String getRelationFile();
 
     //查询数据库信息
     List<KGDBinfoBO> findAll();
