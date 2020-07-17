@@ -331,5 +331,4 @@ public class KGController {
         }
         return Result.success(20414,"导出关系", res);
     }
-
 }

@@ -491,6 +491,7 @@ public class KGServiceImpl implements KGServer {
             System.out.println(e);
             throw new GlobalException(500, "文件错误");
         }
+
         String ip = localHost.getHostAddress();
         url = ip + ":8088" + "/static/" + "实体数据.xlsx";
         return url;

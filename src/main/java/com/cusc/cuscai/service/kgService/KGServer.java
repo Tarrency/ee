@@ -38,7 +38,7 @@ public interface KGServer {
     // 可视化用
     GraphDTO paint(long id);
 
-    // 导出实体与关系
+    // 导出实体与关系文件
     String getEntityFile();
     String getRelationFile();
 
