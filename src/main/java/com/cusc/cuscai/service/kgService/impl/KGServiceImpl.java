@@ -10,6 +10,12 @@ import com.cusc.cuscai.exception.GlobalException;
 import com.cusc.cuscai.service.kgService.KGServer;
 import com.cusc.cuscai.util.POIUtil;
 import com.cusc.cuscai.util.UUIDUtil;
+import org.apache.commons.collections4.list.AbstractLinkedList;
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.neo4j.driver.internal.InternalPath;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
@@ -21,6 +27,9 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.URLDecoder;
 import java.util.*;
 
@@ -108,7 +117,6 @@ public class KGServiceImpl implements KGServer {
             NodeModel node = (NodeModel) each.get("nb");
             long nb_id = node.getId();
             String name = "";
-//            String name = (String) node.getPropertyList().get(0).getValue();
             for(int j=0; j<node.getPropertyList().size(); j++) {
                 if(node.getPropertyList().get(j).getKey().equals("name")) {
                     name = (String) node.getPropertyList().get(j).getValue();
@@ -202,7 +210,7 @@ public class KGServiceImpl implements KGServer {
             System.out.println(e);
             throw new GlobalException(500, "文件错误");
         }
-        return "http://localhost:8080/static/" + filename;
+        return "http://localhost:8088/static/" + filename;
     }
 
     @Override
@@ -327,7 +335,6 @@ public class KGServiceImpl implements KGServer {
             Map<String, Object> each = iterator.next();
             for(String s: each.keySet()) {
                 String res = (String) each.get(s);
-//                System.out.println(res[0]);
                 ans.add(res);
             }
         }
@@ -369,24 +376,10 @@ public class KGServiceImpl implements KGServer {
             nodeMap.put(start.id(), start);
             nodeMap.put(end.id(), end);
 
-//            for (Node node : internalPath.nodes()) {
-//                InternalNode internalNode = (InternalNode) node;
-//                if (nodeMap.containsKey(internalNode.id())) {
-//                    continue;
-//                }
-//                nodeMap.put(internalNode.id(), internalNode);
-//            }
-
-            //归纳出所有关系。 (InternalRelationship)?
+            //归纳出所有关系。
             Relationship relation = internalPath.relationship();
             linkMap.put(relation.id(), relation);
-//            for (Relationship relation : internalPath.relationships()) {
-//                InternalRelationship internalRelation = (InternalRelationship) relation;
-//                if (linkMap.containsKey(internalRelation.id())) {
-//                    continue;
-//                }
-//                linkMap.put(internalRelation.id(), internalRelation);
-//            }
+
         }
         List<Map<String, Object>> resN = new ArrayList<>();
         List<Map<String, Object>> resR = new ArrayList<>();
@@ -394,14 +387,8 @@ public class KGServiceImpl implements KGServer {
             Map<String, Object> one = new HashMap<>();
             Node n = (Node) nodeMap.get(id);
             one.put("id", id);
-//            Iterable<String> labels = n.labels();
             one.put("label", n.labels().iterator().next());
             one.put("name", n.asMap().get("name"));
-//            for(int i=0; i< n.().size(); i++) {
-//                if(n.getPropertyList().get(i).getKey().equals("name")) {
-//                    one.put("name", n.getPropertyList().get(i).getValue());
-//                }
-//            }
             resN.add(one);
         }
 
@@ -418,9 +405,150 @@ public class KGServiceImpl implements KGServer {
         GraphDTO dto = new GraphDTO();
         dto.setNodes(Collections.singletonList(resN));
         dto.setLinks(Collections.singletonList(resR));
-//        dto.setNodes(nodeMap.values().stream().collect(Collectors.toList()));
-//        dto.setLinks(linkMap.values().stream().collect(Collectors.toList()));
         return dto;
+    }
+
+    /**
+     * 导出实体和关系
+     */
+    @Override
+    public String getEntityFile() {
+        Neo4jSession session = neo4jDao.open();
+        String cypher = "MATCH (n) " + " RETURN (n)";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        List<NodeModel> ans = new ArrayList<>();
+        while(iterator.hasNext()) {
+            Map<String, Object> each = iterator.next();
+            NodeModel node = (NodeModel) each.get("n");
+            ans.add(node);
+        }
+        return outputEFile(ans);
+    }
+
+    @Override
+    public String getRelationFile() {
+        Neo4jSession session = neo4jDao.open();
+        String cypher = " match ()-[r]->()" + " return r";
+        Iterator<Map<String, Object>> iterator = session.exec(cypher);
+        List<RelationshipModel> ans = new ArrayList<>();
+        while(iterator.hasNext()) {
+            Map<String, Object> each = iterator.next();
+            RelationshipModel r = (RelationshipModel) each.get("r");
+            ans.add(r);
+        }
+        return outputRFile(ans);
+    }
+
+    private String outputEFile(List<NodeModel> ls){
+        // 声明工作簿
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        // 生成一个表格
+        Sheet sheet = workbook.createSheet("导出实体数据");
+        sheet.setDefaultColumnWidth(15);
+
+        Row row;
+        int index = 0;
+        // 每行加入数据
+        for (int j = 0; j < ls.size(); j++) {
+            NodeModel n = ls.get(j);
+            row = sheet.createRow(index);
+            Map<String, Object> m = new HashMap<>();
+            m.put("id", n.getId());
+            m.put("label", n.getLabels());
+
+            Cell idValue = row.createCell(0);
+            String idi = "id: " + m.get("id");
+            idValue.setCellValue(idi);
+            Cell labelValue = row.createCell(1);
+            String labeli = "label: " + m.get("id");
+            labelValue.setCellValue(labeli);
+
+            int k = 2;
+            for (int i = 0; i < n.getPropertyList().size(); i++) {
+                m.put(n.getPropertyList().get(i).getKey(), n.getPropertyList().get(i).getValue());
+                Cell cell = row.createCell(k);
+                String info = n.getPropertyList().get(i).getKey() + ": " + n.getPropertyList().get(i).getValue();
+                cell.setCellValue(info);
+                k++;
+            }
+            index++;
+        }
+
+        String url;
+        InetAddress localHost = null;
+        try {
+            String path = ResourceUtils.getURL("classpath:").getPath();
+            path = URLDecoder.decode(path, "UTF-8"); //解决中文乱码问题
+            File newFile = new File(path + "/static/" + "实体数据.xlsx");
+            System.out.println(path);
+            newFile.createNewFile();
+            // 将Excel内容存盘
+            FileOutputStream stream = FileUtils.openOutputStream(newFile);
+            workbook.write(stream);// 重名会覆盖对应的文件
+            stream.close();
+            localHost = Inet4Address.getLocalHost();
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new GlobalException(500, "文件错误");
+        }
+        String ip = localHost.getHostAddress();
+        url = ip + ":8088" + "/static/" + "实体数据.xlsx";
+        return url;
+    }
+
+    private String outputRFile(List<RelationshipModel> ls){
+        // 声明工作簿
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        // 生成一个表格
+        Sheet sheet = workbook.createSheet("导出关系数据");
+        sheet.setDefaultColumnWidth(15);
+
+        int index = 0;
+        Row row = sheet.createRow(index);
+        // 产生表格标题行
+        Cell sidCell = row.createCell(0);
+        sidCell.setCellValue("start_id");
+        Cell eidCell = row.createCell(1);
+        eidCell.setCellValue("ent_id");
+        Cell typeCell = row.createCell(2);
+        typeCell.setCellValue("type");
+
+        // 每行加入数据
+        for (int j = 0; j < ls.size(); j++) {
+            index++;
+            row = sheet.createRow(index);
+            RelationshipModel r = ls.get(j);
+            String rtype = r.getType();
+            Long sid = r.getStartNode();
+            Long eid = r.getEndNode();
+            Cell cell1 = row.createCell(0);
+            cell1.setCellValue(sid);
+            Cell cell2 = row.createCell(1);
+            cell2.setCellValue(eid);
+            Cell cell3 = row.createCell(2);
+            cell3.setCellValue(rtype);
+        }
+
+        String url;
+        InetAddress localHost = null;
+        try {
+            String path = ResourceUtils.getURL("classpath:").getPath();
+            path = URLDecoder.decode(path, "UTF-8"); //解决中文乱码问题
+            File newFile = new File(path + "/static/" + "关系数据.xlsx");
+            System.out.println(path);
+            newFile.createNewFile();
+            // 将Excel内容存盘
+            FileOutputStream stream = FileUtils.openOutputStream(newFile);
+            workbook.write(stream);// 重名会覆盖对应的文件
+            stream.close();
+            localHost = Inet4Address.getLocalHost();
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new GlobalException(500, "文件错误");
+        }
+        String ip = localHost.getHostAddress();
+        url = ip + ":8088" + "/static/" + "关系数据.xlsx";
+        return url;
     }
 
     /**

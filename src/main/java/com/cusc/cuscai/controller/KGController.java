@@ -278,6 +278,7 @@ public class KGController {
         return Result.success(20410,"查询邻居节点", neibor);
     }
 
+
     @GetMapping("/getDBlist")
     @ApiOperation("查询数据库列表信息")
     public Result getList() {
@@ -290,6 +291,7 @@ public class KGController {
         }
         return Result.success(20410, "查询数据库列表信息", dbList);
     }
+
     @PostMapping("/addDBInfo")
     @ApiOperation("添加数据库信息")
     public Result newAgent(
@@ -304,6 +306,30 @@ public class KGController {
         }
 
        return Result.success(20412, "添加数据成功",null);
+    }
+
+    @ApiOperation("导出实体")
+    @PostMapping("/downloadEntity")
+    public Result downloadEntity() {
+        String res;
+        try{
+            res = kgServer.getEntityFile();
+        } catch (Exception e) {
+            return Result.fail(40413, e.getMessage());
+        }
+        return Result.success(20413,"导出实体", res);
+    }
+
+    @ApiOperation("导出关系")
+    @PostMapping("/downloadRelation")
+    public Result downloadRelation() {
+        String res;
+        try{
+            res = kgServer.getRelationFile();
+        } catch (Exception e) {
+            return Result.fail(40414, e.getMessage());
+        }
+        return Result.success(20414,"导出关系", res);
     }
 
 }
