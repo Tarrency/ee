@@ -42,6 +42,9 @@ public interface KGServer {
     String getEntityFile();
     String getRelationFile();
 
+    // 生成模板
+    String templete();
+
     //查询数据库信息
     List<KGDBinfoBO> findAll();
 

@@ -309,7 +309,7 @@ public class KGController {
     }
 
     @ApiOperation("导出实体")
-    @PostMapping("/downloadEntity")
+    @GetMapping("/downloadEntity")
     public Result downloadEntity() {
         String res;
         try{
@@ -321,7 +321,7 @@ public class KGController {
     }
 
     @ApiOperation("导出关系")
-    @PostMapping("/downloadRelation")
+    @GetMapping("/downloadRelation")
     public Result downloadRelation() {
         String res;
         try{
@@ -330,5 +330,16 @@ public class KGController {
             return Result.fail(40414, e.getMessage());
         }
         return Result.success(20414,"导出关系", res);
+    }
+
+    @ApiOperation("下载模板")
+    @GetMapping("/downloadTemplete")
+    public Result downloadTemplete() {
+        try{
+            kgServer.templete();
+        } catch (Exception e) {
+            return Result.fail(40415, e.getMessage());
+        }
+        return Result.success(20415,"下载模板");
     }
 }

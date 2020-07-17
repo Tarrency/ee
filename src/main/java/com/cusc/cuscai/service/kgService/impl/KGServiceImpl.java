@@ -552,6 +552,62 @@ public class KGServiceImpl implements KGServer {
         return url;
     }
 
+    @Override
+    public String templete() {
+        // 声明工作簿
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        // 生成一个表格
+        Sheet sheet = workbook.createSheet("实体模板");
+        sheet.setDefaultColumnWidth(15);
+
+        Row row = sheet.createRow(0);
+        // 产生表格标题行
+        Cell cell1 = row.createCell(0);
+        cell1.setCellValue("name");
+        Cell cell2 = row.createCell(1);
+        cell2.setCellValue("label");
+
+        XSSFWorkbook workbook2 = new XSSFWorkbook();
+        Sheet sheet2 = workbook2.createSheet("关系模板");
+        sheet2.setDefaultColumnWidth(15);
+        Row row2 = sheet2.createRow(0);
+        Cell cell3 = row2.createCell(0);
+        cell3.setCellValue("id1");
+        Cell cell4 = row2.createCell(1);
+        cell4.setCellValue("id2");
+        Cell cell5 = row2.createCell(2);
+        cell5.setCellValue("type");
+
+        try {
+            String path = ResourceUtils.getURL("classpath:").getPath();
+            path = URLDecoder.decode(path, "UTF-8"); //解决中文乱码问题
+            File newFile = new File(path + "/static/" + "实体模板.xlsx");
+            if(!newFile.exists()) {
+                System.out.println("第一次生成实体模板文件");
+                newFile.createNewFile();
+                // 将Excel内容存盘
+                FileOutputStream stream = FileUtils.openOutputStream(newFile);
+                workbook.write(stream);// 重名会覆盖对应的文件
+                stream.close();
+            }
+
+            File newFile2 = new File(path + "/static/" + "关系模板.xlsx");
+            if(!newFile2.exists()) {
+                System.out.println("第一次生成关系模板文件");
+                newFile2.createNewFile();
+                // 将Excel内容存盘
+                FileOutputStream stream2 = FileUtils.openOutputStream(newFile2);
+                workbook2.write(stream2);// 重名会覆盖对应的文件
+                stream2.close();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new GlobalException(500, "文件错误");
+        }
+        return null;
+    }
+
     /**
      * 数据库操作
      */
