@@ -41,7 +41,7 @@ public class Result {
         return new Result(code, msg, data);
     }
 
-    //返回正确
+    //返回正确hotspot_question_infohotspot_question_info
     public static Result success(int code, String msg) {
         return new Result(code, msg, null);
     }
